@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Домашняя страница";
 }
+@model IEnumerable<TravelApp.API.Models.City>
 
 <div class="top-content">
     <h1 class="kiwi-maru-regular text-center">Что делаем, куда  идем</h1>
@@ -14,7 +15,15 @@
         </h2>
     </div>
 
-
+    @foreach (var city in Model)
+    {
+        <div class="item">
+            <a href="#">
+                <img src="@city.PictureAtHomeLink" alt="@city.Title">
+                <div class="centered">@city.Title</div>
+            </a>
+        </div>
+    }
 
     <div class="item-center">
         <h2 class="kiwi-maru-regular text-center mt-5 mb-5">

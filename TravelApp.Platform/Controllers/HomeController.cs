@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TravelApp.API.Models;
+using TravelApp.Platform.ClientAPI;
 using TravelApp.Platform.Models;
 
 namespace TravelApp.Platform.Controllers
@@ -8,14 +10,19 @@ namespace TravelApp.Platform.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly CityHttpClient _cityHttpClient;
+
+        public HomeController(ILogger<HomeController> logger, CityHttpClient cityHttpClient)
         {
             _logger = logger;
+            _cityHttpClient = cityHttpClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _cityHttpClient.GetAllAsync();
+            List<City> cities = result.ToList();
+            return View(cities);
         }
 
         public IActionResult Privacy()
