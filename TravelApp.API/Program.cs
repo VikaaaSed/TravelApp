@@ -1,11 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using TravelApp.API.Contexts;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
