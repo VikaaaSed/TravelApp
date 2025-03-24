@@ -1,4 +1,6 @@
 using TravelApp.Platform.ClientAPI;
+using TravelApp.Platform.Services.Interfaces;
+using TravelApp.Platform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<CityHttpClient>();
+
+builder.Services.AddHttpClient<CityViewHttpClient>();
+builder.Services.AddScoped<IHomeService, HomeService>();
 
 var app = builder.Build();
 
