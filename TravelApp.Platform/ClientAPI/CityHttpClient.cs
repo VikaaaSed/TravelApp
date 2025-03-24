@@ -21,5 +21,17 @@
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.City>>();
         }
+        public async Task<API.Models.City> GetCityByPageNameAsync(string pageName)
+        {
+            string url = $"{xPathCity}/City/GetCityByPageName";
+
+            if (pageName != null)
+                url += $"?pageName={pageName}";
+
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<API.Models.City>();
+        }
     }
 }

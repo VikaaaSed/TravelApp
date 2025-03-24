@@ -18,7 +18,7 @@
     @foreach (var city in Model)
     {
         <div class="item">
-            <a href="#">
+            <a asp-controller="City" asp-action="index" asp-route-pagename="@city.PageName">
                 <img src="@city.PictureLink" alt="@city.Title">
                 <div class="centered">@city.Title</div>
             </a>

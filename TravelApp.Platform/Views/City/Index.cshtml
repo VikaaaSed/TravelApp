@@ -1,0 +1,18 @@
+﻿@model TravelApp.API.Models.City
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="img-container my-5">
+    <img class="city-main-img" src="@Model.MainPictureLink" alt="@Model.Title" />
+    <div class="mx-5">
+        <h1 class="kiwi-maru-regular text-center my-5">Немного из истории</h1>
+    </div>
+</div>
+<div class="items py-5 text-center">
+    <div class="item-center">
+        <h2 class="kiwi-maru-regular text-center">
+            Куда сходить
+        </h2>
+    </div>
+</div>
