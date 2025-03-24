@@ -27,5 +27,8 @@ namespace TravelApp.API.Controllers
         [HttpGet("GetCityInHomePage")]
         public async Task<ActionResult<IEnumerable<City>>> GetCityInHomePageAsync()
             => Ok(await _viewRepository.GetAllAsync());
+        [HttpGet("GetCityByPageName")]
+        public async Task<ActionResult<City?>> GetCityByPageNameAsync(string pageName)
+            => Ok(await _repository.GetCityByPageNameAsync(pageName));
     }
 }

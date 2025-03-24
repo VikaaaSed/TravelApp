@@ -16,6 +16,10 @@ namespace TravelApp.API.Repositories
         }
         public async Task<IEnumerable<City>> GetAllAsync()
             => await _context.CreateDbContext().Cities.ToListAsync();
+
+        public async Task<City?> GetCityByPageNameAsync(string PageName)
+            => await _context.CreateDbContext().Cities.FirstOrDefaultAsync(n => n.PageName == PageName);
+
         public async Task<IEnumerable<City>> GetVisibleCityAsync()
             => await _context.CreateDbContext().Cities.Where(n => n.PageVisible).ToListAsync();
     }

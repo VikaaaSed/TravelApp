@@ -6,5 +6,6 @@ namespace TravelApp.API.Repositories.Interfaces
     {
         Task<IEnumerable<City>> GetAllAsync();
         Task<IEnumerable<City>> GetVisibleCityAsync();
+        Task<City?> GetCityByPageNameAsync(string PageName);
     }
 }
