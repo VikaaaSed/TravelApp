@@ -14,7 +14,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 
+builder.Services.AddScoped<ICityInHomePageViewRepository, CityInHomePageViewRepository>();
+
 builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
+
+builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
