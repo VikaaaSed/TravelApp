@@ -16,9 +16,13 @@ builder.Services.AddScoped<ICityRepository, CityRepository>();
 
 builder.Services.AddScoped<ICityInHomePageViewRepository, CityInHomePageViewRepository>();
 
+builder.Services.AddScoped<ILocationInCityViewRepository, LocationInCityViewRepository>();
+
 builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
+
+builder.Services.AddDbContextFactory<LocationInCityContext>(o => o.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
