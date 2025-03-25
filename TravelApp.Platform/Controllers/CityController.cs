@@ -16,7 +16,7 @@ namespace TravelApp.Platform.Controllers
         }
         public async Task<IActionResult> Index(string pageName)
         {
-            return View(await _cityService.GetCityByPageNameAsync(pageName));
+            return View(await _cityService.GetAllCityInformationByPageNameAsync(pageName));
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

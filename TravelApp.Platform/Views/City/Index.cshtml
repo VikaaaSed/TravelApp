@@ -1,12 +1,18 @@
-﻿@model TravelApp.API.Models.City
+﻿@model TravelApp.Platform.Models.AllCityInformation
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.City.Title;
 }
 
 <div class="img-container my-5">
-    <img class="city-main-img" src="@Model.MainPictureLink" alt="@Model.Title" />
+    <img class="city-main-img" src="@Model.City.MainPictureLink" alt="@Model.City.Title" />
     <div class="mx-5">
         <h1 class="kiwi-maru-regular text-center my-5">Немного из истории</h1>
+        @foreach (var row in Model.City.Description.Split("\t"))
+        {
+            <p>
+                @row
+            </p>
+        }
     </div>
 </div>
 <div class="items py-5 text-center">
@@ -15,4 +21,18 @@
             Куда сходить
         </h2>
     </div>
+    @foreach (var location in Model.Locations)
+    {
+        <div class="item">
+            <a href="#">
+                <img src="@location.PictureLink" alt="@location.Title">
+                <div class="centered">
+                    @location.Title
+                </div>
+                <span class="bottom-right badge bg-success rounded-pill">
+                    @location.Rating
+                </span>
+            </a>
+        </div>
+    }
 </div>
