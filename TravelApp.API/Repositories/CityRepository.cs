@@ -15,12 +15,12 @@ namespace TravelApp.API.Repositories
             _logger = logger;
         }
         public async Task<IEnumerable<City>> GetAllAsync()
-            => await _context.CreateDbContext().Cities.ToListAsync();
+            => await _context.CreateDbContext().Cities.OrderBy(n => n.Id).ToListAsync();
 
         public async Task<City?> GetCityByPageNameAsync(string PageName)
             => await _context.CreateDbContext().Cities.FirstOrDefaultAsync(n => n.PageName == PageName);
 
         public async Task<IEnumerable<City>> GetVisibleCityAsync()
-            => await _context.CreateDbContext().Cities.Where(n => n.PageVisible).ToListAsync();
+            => await _context.CreateDbContext().Cities.Where(n => n.PageVisible).OrderBy(n => n.Id).ToListAsync();
     }
 }

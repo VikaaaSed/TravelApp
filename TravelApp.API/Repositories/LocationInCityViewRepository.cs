@@ -16,6 +16,6 @@ namespace TravelApp.API.Repositories
             _logger = logger;
         }
         public async Task<IEnumerable<LocationInCity>> GetLocationInCityByCityIdAsync(int cityId)
-            => await _context.CreateDbContext().Locations.Where(n => n.CityId == cityId).ToListAsync();
+            => await _context.CreateDbContext().Locations.Where(n => n.CityId == cityId).OrderBy(n => n.Id).ToListAsync();
     }
 }

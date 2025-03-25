@@ -17,6 +17,6 @@ namespace TravelApp.API.Repositories
             _logger = logger;
         }
         public async Task<IEnumerable<CityInHomePage>> GetAllAsync()
-            => await _context.CreateDbContext().Cities.ToListAsync();
+            => await _context.CreateDbContext().Cities.OrderBy(n => n.Id).ToListAsync();
     }
 }
