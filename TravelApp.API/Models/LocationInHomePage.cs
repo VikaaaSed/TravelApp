@@ -8,7 +8,7 @@
         public required string Description { get; set; }
         public required string Address { get; set; }
         public required string WorkSchedule { get; set; }
-        public bool FreeVisit { get; set; }
+        public required string TicketLink { get; set; }
         public required string PictureLink { get; set; }
         public required string PageName { get; set; }
 

@@ -22,7 +22,7 @@ namespace TravelApp.API.Contexts
                 entity.Property("Description").HasColumnName("description");
                 entity.Property("Address").HasColumnName("address");
                 entity.Property("WorkSchedule").HasColumnName("workschedule");
-                entity.Property("FreeVisit").HasColumnName("freevisit");
+                entity.Property("TicketLink").HasColumnName("ticketlink");
                 entity.Property("PictureLink").HasColumnName("picturepagelink");
                 entity.Property("PageName").HasColumnName("pagename");
             });
