@@ -15,6 +15,8 @@ builder.Services.AddHttpClient<LocationViewHttpClient>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<ICityService, CityService>();
 
+builder.Services.AddScoped<ILocationService, LocationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

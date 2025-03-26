@@ -19,5 +19,16 @@
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.LocationInCity>>();
         }
+        public async Task<API.Models.LocationInHomePage> GetLocationByPageNameAsync(string pageName)
+        {
+            string url = $"{xPathCity}/Location/GetLocationByPageName";
+
+            if (pageName != null)
+                url += $"?pageName={pageName}";
+
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<API.Models.LocationInHomePage>();
+        }
     }
 }

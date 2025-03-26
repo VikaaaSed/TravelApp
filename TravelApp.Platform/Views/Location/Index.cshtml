@@ -1,0 +1,41 @@
+﻿@model TravelApp.API.Models.LocationInHomePage
+@{
+    ViewData["Title"] = Model.Title;
+}
+<div class="img-container my-5">
+    <img class="city-main-img" src="@Model.PictureLink" alt="@Model.Title" />
+    <div class="mx-5">
+        <h2 class="kiwi-maru-regular text-center my-5">Немного из истории</h2>
+        <p>
+            @Model.Description
+        </p>
+        <h2 class="kiwi-maru-regular text-center my-5">Время работы</h2>
+        <p>
+            @Model.WorkSchedule<br>
+        </p>
+        <p><b>Адрес: @Model.Address</b></p>
+        <div class="btn-container">
+            @if (Model.TicketLink == "")
+            {
+                <b class="btn btn-2">Вход свободный</b>
+            }
+            else
+            {
+                <a href="@Model.TicketLink" class="btn btn-2">Купить билет</a>
+            }
+        </div>
+    </div>
+</div>
+<div class="items py-5 text-center">
+    <div class="item-center">
+        <h2 class="kiwi-maru-regular text-center">
+            Фотографии
+        </h2>
+    </div>
+</div>
+
+<div class="img-container mb-5">
+    <div class="mx-5">
+        <h2 class="kiwi-maru-regular text-center my-5">Поделитесь мнением</h2>
+    </div>
+</div>
