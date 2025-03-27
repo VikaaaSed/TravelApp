@@ -1,27 +1,27 @@
-﻿@model TravelApp.API.Models.LocationInHomePage
+﻿@model TravelApp.Platform.Models.AllLocationInformation
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.Location.Title;
 }
 <div class="img-container my-5">
-    <img class="city-main-img" src="@Model.PictureLink" alt="@Model.Title" />
+    <img class="city-main-img" src="@Model.Location.PictureLink" alt="@Model.Location.Title" />
     <div class="mx-5">
         <h2 class="kiwi-maru-regular text-center my-5">Немного из истории</h2>
         <p>
-            @Model.Description
+            @Model.Location.Description
         </p>
         <h2 class="kiwi-maru-regular text-center my-5">Время работы</h2>
         <p>
-            @Model.WorkSchedule<br>
+            @Model.Location.WorkSchedule<br>
         </p>
-        <p><b>Адрес: @Model.Address</b></p>
+        <p><b>Адрес: @Model.Location.Address</b></p>
         <div class="btn-container">
-            @if (Model.TicketLink == "")
+            @if (Model.Location.TicketLink == "")
             {
                 <b class="btn btn-2">Вход свободный</b>
             }
             else
             {
-                <a href="@Model.TicketLink" class="btn btn-2">Купить билет</a>
+                <a href="@Model.Location.TicketLink" class="btn btn-2">Купить билет</a>
             }
         </div>
     </div>
@@ -32,6 +32,12 @@
             Фотографии
         </h2>
     </div>
+    @foreach(var photo in Model.Gallery)
+    {
+        <div class="item-foto-n-h">
+            <img src="@photo.PictureLink" alt="@photo.Title">
+        </div>
+    }
 </div>
 
 <div class="img-container mb-5">

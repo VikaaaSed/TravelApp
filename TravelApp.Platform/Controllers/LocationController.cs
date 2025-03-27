@@ -18,7 +18,7 @@ namespace TravelApp.Platform.Controllers
         }
         public async Task<IActionResult> Index(string pageName)
         {
-            LocationInHomePage location = await _locationService.GetLocationInHomePageByPageNameAsync(pageName);
+            AllLocationInformation location = await _locationService.GetAllLocationInformationAsync(pageName);
 
             if (location == null)
                 return NotFound();
