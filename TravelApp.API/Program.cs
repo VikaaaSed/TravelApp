@@ -20,11 +20,15 @@ builder.Services.AddScoped<ILocationInCityViewRepository, LocationInCityViewRepo
 
 builder.Services.AddScoped<ILocationInHomePageViewRepository, LocationInHomePageViewRepository>();
 
+builder.Services.AddScoped<ILocationGalleryRepository, LocationGalleryRepository>();
+
 builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<LocationInCityContext>(o => o.UseNpgsql(connectionString));
+
+builder.Services.AddDbContextFactory<LocationGalleryContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<LocationInHomePageContext>(o => o.UseNpgsql(connectionString));
 
