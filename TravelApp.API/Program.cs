@@ -22,6 +22,8 @@ builder.Services.AddScoped<ILocationInHomePageViewRepository, LocationInHomePage
 
 builder.Services.AddScoped<ILocationGalleryRepository, LocationGalleryRepository>();
 
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
 builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
@@ -31,6 +33,8 @@ builder.Services.AddDbContextFactory<LocationInCityContext>(o => o.UseNpgsql(con
 builder.Services.AddDbContextFactory<LocationGalleryContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<LocationInHomePageContext>(o => o.UseNpgsql(connectionString));
+
+builder.Services.AddDbContextFactory<FeedbackContext>(o => o.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
