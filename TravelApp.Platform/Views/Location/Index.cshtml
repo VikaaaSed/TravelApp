@@ -44,4 +44,22 @@
     <div class="mx-5">
         <h2 class="kiwi-maru-regular text-center my-5">Поделитесь мнением</h2>
     </div>
+    <div>
+        <h2 class="kiwi-maru-regular text-center my-5">Отзывы</h2>
+        <table class="table table-info">
+
+            <tbody>
+                @foreach (var feedback in Model.Feedbacks)
+                {
+                    <tr>
+                        <td>@feedback.SenderName</td>
+                        <td>@feedback.DateOfPublication.ToShortDateString()</td>
+                        <td>@feedback.Text</td>
+                        <td>@feedback.Ball</td>
+                    </tr>
+                }
+            </tbody>
+            <caption>>:^) Всего: @Model.Feedbacks.Count()</caption>
+        </table>
+    </div>
 </div>

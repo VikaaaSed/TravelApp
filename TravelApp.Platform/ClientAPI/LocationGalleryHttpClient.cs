@@ -8,7 +8,7 @@
         {
             _httpClient = httpClient;
         }
-        public async Task<IEnumerable<API.Models.LocationGallery>> GetLocationGalleryByLocationIdAsync(int locationId)
+        public async Task<IEnumerable<API.Models.LocationGallery>> GetLocationGalleryByIdLocationAsync(int locationId)
         {
             string url = $"{xPathCity}/LocationGallery/GetGalleryByLocationId";
 

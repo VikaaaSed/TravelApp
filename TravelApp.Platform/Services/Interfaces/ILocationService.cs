@@ -6,7 +6,8 @@ namespace TravelApp.Platform.Services.Interfaces
     public interface ILocationService
     {
         public Task<LocationInHomePage> GetLocationInHomePageByPageNameAsync(string pageName);
-        public Task<List<LocationGallery>> GetLocationGalleryByPageNameAsync(int id);
+        public Task<List<LocationGallery>> GetLocationGalleryByIdLocationAsync(int id);
         public Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName);
+        public Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation);
     }
 }

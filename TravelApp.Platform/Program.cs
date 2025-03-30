@@ -12,6 +12,7 @@ builder.Services.AddHttpClient<CityHttpClient>();
 builder.Services.AddHttpClient<CityViewHttpClient>();
 builder.Services.AddHttpClient<LocationViewHttpClient>();
 builder.Services.AddHttpClient<LocationGalleryHttpClient>();
+builder.Services.AddHttpClient<FeedbackViewHttpClient>();
 
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<ICityService, CityService>();
