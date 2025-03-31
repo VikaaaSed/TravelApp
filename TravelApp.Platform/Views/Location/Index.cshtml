@@ -43,6 +43,27 @@
 <div class="img-container mb-5">
     <div class="mx-5">
         <h2 class="kiwi-maru-regular text-center my-5">Поделитесь мнением</h2>
+        <form method="post" class="form-reviews" asp-controller="location" asp-action="AddReview"> 
+            <div class="form-group">
+                <input type="hidden" name="pageName" value="@Model.Location.PageName" />
+                <input type="hidden" name="IdLocation" value="@Model.Location.Id" />
+                <br />
+                <label>Представьтесь!</label>
+                <br />
+                <input class="mb-2" name="NameSender" value="@ViewData["FIO"]" type="text" @(string.IsNullOrEmpty(ViewData["FIO"]?.ToString()) ? "" : "readonly") />
+                <textarea class="form-control" placeholder="Ваш отзыв" name="Text"></textarea>
+                <div class="stars">
+                    <div class="star-group">
+                        <input type="radio" class="star" id="one" value="1" name="Ball"  />
+                        <input type="radio" class="star" id="two" value="2" name="Ball" />
+                        <input type="radio" class="star" id="three" value="3" name="Ball"/>
+                        <input type="radio" class="star" id="four" value="4" name="Ball"/>
+                        <input type="radio" class="star" id="five" value="5" name="Ball" checked />
+                    </div>
+                </div>
+                <button type="submit" class="btn-container btn btn-2">Отправить</button>
+            </div>
+        </form>
     </div>
     <div>
         <h2 class="kiwi-maru-regular text-center my-5">Отзывы</h2>

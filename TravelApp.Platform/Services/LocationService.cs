@@ -10,15 +10,19 @@ namespace TravelApp.Platform.Services
         private readonly LocationViewHttpClient _locationViewHttpClient;
         private readonly LocationGalleryHttpClient _locationGalleryHttpClient;
         private readonly FeedbackViewHttpClient _feedbackViewHttpClient;
+        private readonly FeedbackHttpClient _feedbackHttpClient;
         public LocationService(LocationViewHttpClient locationViewHttpClient,
             LocationGalleryHttpClient locationGalleryHttpClient,
-            FeedbackViewHttpClient feedbackViewHttpClient)
+            FeedbackViewHttpClient feedbackViewHttpClient,
+            FeedbackHttpClient feedbackHttpClient)
         {
             _locationViewHttpClient = locationViewHttpClient;
             _locationGalleryHttpClient = locationGalleryHttpClient;
             _feedbackViewHttpClient = feedbackViewHttpClient;
+            _feedbackHttpClient = feedbackHttpClient;
         }
-
+        public async Task<Feedback> CreateFeedbackAsync(Feedback feedback)
+            => await _feedbackHttpClient.CreateFeedbackAsync(feedback);
         public async Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName)
         {
             LocationInHomePage location = await GetLocationInHomePageByPageNameAsync(pageName);

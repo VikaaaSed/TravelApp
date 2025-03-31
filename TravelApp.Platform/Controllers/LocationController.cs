@@ -31,5 +31,13 @@ namespace TravelApp.Platform.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [HttpPost]
+        public async Task<IActionResult> AddReview(string pageName, Feedback model)
+        {
+            model.SenderIpAddress = "127.0.0.1";
+            model.DateTime = DateTime.UtcNow;
+            Feedback feedback = await _locationService.CreateFeedbackAsync(model);
+            return RedirectToAction("Index", new { pageName });
+        }
     }
 }

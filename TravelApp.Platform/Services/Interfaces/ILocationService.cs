@@ -9,5 +9,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<List<LocationGallery>> GetLocationGalleryByIdLocationAsync(int id);
         public Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName);
         public Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation);
+        public Task<Feedback> CreateFeedbackAsync(Feedback feedback);
     }
 }
