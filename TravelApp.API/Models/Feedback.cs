@@ -8,7 +8,7 @@
         public int Ball { get; set; }
         public required string NameSender { get; set; }
         public required string SenderIpAddress { get; set; }
-        public required string TextFeedback { get; set; }
+        public required string Text { get; set; }
         public bool IsAccepted { get; set; }
         public DateTime DateTime { get; set; }
     }

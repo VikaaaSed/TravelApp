@@ -20,7 +20,7 @@ namespace TravelApp.API.Contexts
                 entity.Property("Id").HasColumnName("id");
                 entity.Property("IdLocation").HasColumnName("id_location");
                 entity.Property("NameSender").HasColumnName("namesender");
-                entity.Property("TextFeedback").HasColumnName("textfeedback");
+                entity.Property("Text").HasColumnName("textfeedback");
                 entity.Property("Ball").HasColumnName("ball");
                 entity.Property("IsAccepted").HasColumnName("accepted");
                 entity.Property("DateTime").HasColumnName("datetime");
