@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<CityHttpClient>();
 builder.Services.AddHttpClient<CityViewHttpClient>();
 builder.Services.AddHttpClient<LocationViewHttpClient>();
@@ -17,8 +18,8 @@ builder.Services.AddHttpClient<FeedbackHttpClient>();
 
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<ICityService, CityService>();
-
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IClientIpService, ClientIpService>();
 
 var app = builder.Build();
 
