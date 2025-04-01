@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using TravelApp.API.Models;
+using TravelApp.API.Repositories.Interfaces;
+
+namespace TravelApp.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+        private readonly IUserRepository _userRepository;
+        private readonly ILogger<UserController> _logger;
+
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger)
+        {
+            _userRepository = userRepository;
+            _logger = logger;
+        }
+        [HttpPost("Create")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<User>> Create([FromBody] User user)
+        {
+            User newuser = await _userRepository.CreateAsync(user);
+            return CreatedAtAction(nameof(Create), user);
+        }
+    }
+}
