@@ -22,6 +22,7 @@ builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IClientIpService, ClientIpService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 
 var app = builder.Build();
 

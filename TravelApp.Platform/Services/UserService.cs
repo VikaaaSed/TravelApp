@@ -9,10 +9,13 @@ namespace TravelApp.Platform.Services
     {
         private readonly UserHttpClient _userHttpClient;
         private readonly IClientIpService _clientIpService;
-        public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService)
+        private readonly IPasswordHasher _passwordHasher;
+        public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
+            IPasswordHasher passwordHasher)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
+            _passwordHasher = passwordHasher;
         }
         public async Task<bool> CreateUserAsync(UserRegistration userRegistration)
         {
@@ -24,7 +27,7 @@ namespace TravelApp.Platform.Services
                 LastName = userRegistration.LastName,
                 Email = userRegistration.Email,
                 Age = userRegistration.Age,
-                PasswordHash = userRegistration.Password,
+                PasswordHash = _passwordHasher.HashPassword(userRegistration.Password),
                 RegistrationIp = _clientIpService.GetClientIp(),
                 LastIp = _clientIpService.GetClientIp()
             };
