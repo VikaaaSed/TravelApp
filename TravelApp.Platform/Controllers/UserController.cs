@@ -17,10 +17,18 @@ namespace TravelApp.Platform.Controllers
 
         public IActionResult Index() => View();
         [HttpGet]
-        public IActionResult Registration() => View();
+        public IActionResult Registration()
+        {
+            ModelState.Clear();
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Registration(UserRegistration user)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(user);
+            }
             if (!await _userService.CreateUserAsync(user))
             {
                 ModelState.AddModelError("", "Ошибка при регистрации. Возможно, пароли не совпадают или email уже занят.");

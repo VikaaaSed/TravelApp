@@ -9,21 +9,107 @@
         @TempData["SuccessMessage"]
     </div>
 }
-<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-<form asp-controller="User" asp-action="Registration" class="d-flex justify-content-center" style="height: 100vh;">
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+
+<form novalidate asp-controller="User" asp-action="Registration" class="d-flex justify-content-center" style="height: 100vh;">
     <div class="form-group">
+
         <label class="control-label">Имя</label>
-        <input asp-for="FirstName" class="form-control mb-3" />
+        <input asp-for="FirstName" class="form-control mb-1" />
+        <span asp-validation-for="FirstName" class="text-danger d-block" style="min-height: 20px;"></span>
+
         <label class="control-label">Фамилия</label>
-        <input asp-for="LastName" class="form-control mb-3" />
+        <input asp-for="LastName" class="form-control mb-1" />
+        <span asp-validation-for="LastName" class="text-danger d-block" style="min-height: 20px;"></span>
+
         <label class="control-label">Возраст</label>
-        <input asp-for="Age" min="5" max="90" class="form-control mb-3" />
+        <input asp-for="Age" min="10" max="90" class="form-control mb-1" />
+        <span asp-validation-for="Age" class="text-danger d-block" style="min-height: 20px;"></span>
+
         <label class="control-label">Email</label>
-        <input asp-for="Email" class="form-control mb-3" />
+        <input asp-for="Email" class="form-control mb-1" />
+        <span asp-validation-for="Email" class="text-danger d-block" style="min-height: 20px;"></span>
+
         <label class="control-label">Пароль</label>
-        <input asp-for="Password" type="password" class="form-control mb-3" />
+        <input asp-for="Password" type="password" class="form-control mb-1" />
+        <span asp-validation-for="Password" class="text-danger d-block" style="min-height: 20px;"></span>
+
         <label class="control-label">Повторите пароль</label>
-        <input asp-for="RepeatPassword" type="password" class="form-control mb-3" />
-        <input type="submit" value="Зарегистрироваться" class="btn btn-primary w-100" />
+        <input asp-for="RepeatPassword" type="password" class="form-control mb-1" />
+        <span asp-validation-for="RepeatPassword" class="text-danger d-block" style="min-height: 20px;"></span>
+
+        <input type="submit" value="Зарегистрироваться" class="btn btn-primary w-100" disabled />
     </div>
 </form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            var form = $("form");
+            var submitButton = $("input[type=submit]");
+            var validationSummary = $(".alert-danger");
+
+            $.validator.setDefaults({
+                ignore: [],
+                errorClass: "is-invalid",
+                validClass: "is-valid",
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.next(".text-danger"));
+                },
+
+                onfocusout: false,
+                onkeyup: false,
+                onclick: false
+            });
+
+            form.removeData("validator");
+            form.removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse(form);
+
+            $(".text-danger").hide();
+            validationSummary.hide();
+            submitButton.prop("disabled", false);
+
+            var fieldInteractions = {};
+
+            $("input").on("focus change", function () {
+                var fieldName = $(this).attr("name");
+
+                if (!fieldInteractions[fieldName]) {
+                    fieldInteractions[fieldName] = true;
+
+                    $(this).on("blur change", function () {
+                        $(this).valid();
+                        checkFormValidity();
+                    });
+                }
+            });
+
+            function checkFormValidity() {
+                var formValid = true;
+
+                $.each(fieldInteractions, function (fieldName, interacted) {
+                    if (interacted) {
+                        var field = $("[name='" + fieldName + "']");
+                        if (!field.valid()) {
+                            formValid = false;
+                        }
+                    }
+                });
+
+                submitButton.prop("disabled", !formValid);
+            }
+            form.on("submit", function (e) {
+
+                var validator = form.validate();
+                validator.form();
+
+                if (!form.valid()) {
+                    validationSummary.show();
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}
