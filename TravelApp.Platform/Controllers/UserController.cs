@@ -29,7 +29,7 @@ namespace TravelApp.Platform.Controllers
             {
                 return View(user);
             }
-            if (!await _userService.CreateUserAsync(user))
+            if (!await _userService.RegistrationUserAsync(user))
             {
                 ModelState.AddModelError("", "Ошибка при регистрации. Возможно, пароли не совпадают или email уже занят.");
                 return View(user);

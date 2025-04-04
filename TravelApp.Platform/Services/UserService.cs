@@ -17,10 +17,8 @@ namespace TravelApp.Platform.Services
             _clientIpService = clientIpService;
             _passwordHasher = passwordHasher;
         }
-        public async Task<bool> CreateUserAsync(UserRegistration userRegistration)
+        public async Task<User> CreateUserAsync(UserRegistration userRegistration)
         {
-            if (userRegistration.Email == "" || userRegistration.Password != userRegistration.RepeatPassword)
-                return false;
             var newUser = new User
             {
                 FirstName = userRegistration.FirstName,
@@ -31,9 +29,17 @@ namespace TravelApp.Platform.Services
                 RegistrationIp = _clientIpService.GetClientIp(),
                 LastIp = _clientIpService.GetClientIp()
             };
-            var result = await _userHttpClient.CreateUserAsync(newUser);
-            if (result == null)
-                return false;
+            return await _userHttpClient.CreateUserAsync(newUser);
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+            => await _userHttpClient.GetUserByEmailAsync(email);
+
+        public async Task<bool> RegistrationUserAsync(UserRegistration user)
+        {
+            var result = await GetUserByEmailAsync(user.Email);
+            if (result != null) return false;
+            await CreateUserAsync(user);
             return true;
         }
     }
