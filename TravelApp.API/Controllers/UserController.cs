@@ -23,5 +23,19 @@ namespace TravelApp.API.Controllers
             User newuser = await _userRepository.CreateAsync(user);
             return CreatedAtAction(nameof(Create), user);
         }
+        [HttpGet("GetUserByEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<User?>> GetUserByEmailAsync(string email)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                _logger.LogInformation("Пользователь с email {Email} не найден", email);
+                return NotFound($"Пользователь с email {email} не найден");
+            }
+            return Ok(user);
+        }
     }
 }

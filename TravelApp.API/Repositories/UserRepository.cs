@@ -22,5 +22,18 @@ namespace TravelApp.API.Repositories
             await context.SaveChangesAsync();
             return user;
         }
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                return await _context.CreateDbContext().Users.FirstOrDefaultAsync(x => x.Email == email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Пользователь по указанной почте не найден: {Email}", email);
+                return null;
+            }
+        }
     }
 }
