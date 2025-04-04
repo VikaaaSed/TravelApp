@@ -17,6 +17,23 @@ namespace TravelApp.API.Repositories
             _logger = logger;
         }
         public async Task<IEnumerable<CityInHomePage>> GetAllAsync()
-            => await _context.CreateDbContext().Cities.OrderBy(n => n.Id).ToListAsync();
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var result = await context.Cities
+                    .OrderBy(n => n.Id)
+                    .ToListAsync();
+
+                _logger.LogInformation("Получено {Count} городов для главной страницы.", result.Count);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении городов для главной страницы.");
+                return Enumerable.Empty<CityInHomePage>();
+            }
+        }
     }
 }

@@ -16,10 +16,33 @@ namespace TravelApp.API.Repositories
         }
         public async Task<Feedback> CreateAsync(Feedback feedback)
         {
-            var context = await _context.CreateDbContextAsync();
-            await context.Feedbacks.AddAsync(feedback);
-            await context.SaveChangesAsync();
-            return feedback;
+            if (feedback == null)
+            {
+                _logger.LogWarning("Попытка создания отзыва с пустым объектом.");
+                throw new ArgumentNullException(nameof(feedback));
+            }
+
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                await context.Feedbacks.AddAsync(feedback);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Отзыв успешно создан. ID: {FeedbackId}", feedback.Id);
+
+                return feedback;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении отзыва: {Feedback}", feedback);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при создании отзыва.");
+                throw;
+            }
         }
     }
 }

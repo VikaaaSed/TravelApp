@@ -18,7 +18,32 @@ namespace TravelApp.API.Repositories
         }
 
         public async Task<IEnumerable<LocationGallery>> GetGalleryByIdLocationAsync(int locationId)
-            => await _context.CreateDbContext().Gallery.Where(n => n.LocationId == locationId)
-            .OrderBy(n => n.Id).ToListAsync();
+        {
+            if (locationId <= 0)
+            {
+                _logger.LogWarning("Передан некорректный locationId: {LocationId}", locationId);
+                return Enumerable.Empty<LocationGallery>();
+            }
+
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                var galleryItems = await context.Gallery
+                    .Where(n => n.LocationId == locationId)
+                    .OrderBy(n => n.Id)
+                    .ToListAsync();
+
+                if (!galleryItems.Any())
+                    _logger.LogInformation("Галерея для локации с id {LocationId} не найдена.", locationId);
+
+                return galleryItems;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении галереи для локации с id {LocationId}", locationId);
+                return Enumerable.Empty<LocationGallery>();
+            }
+        }
     }
 }

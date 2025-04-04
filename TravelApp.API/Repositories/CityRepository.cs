@@ -9,18 +9,71 @@ namespace TravelApp.API.Repositories
     {
         private readonly IDbContextFactory<CityContext> _context;
         private readonly ILogger<CityRepository> _logger;
+
         public CityRepository(IDbContextFactory<CityContext> context, ILogger<CityRepository> logger)
         {
             _context = context;
             _logger = logger;
         }
-        public async Task<IEnumerable<City>> GetAllAsync()
-            => await _context.CreateDbContext().Cities.OrderBy(n => n.Id).ToListAsync();
 
-        public async Task<City?> GetCityByPageNameAsync(string PageName)
-            => await _context.CreateDbContext().Cities.FirstOrDefaultAsync(n => n.PageName == PageName);
+        public async Task<IEnumerable<City>> GetAllAsync()
+        {
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                return await context.Cities.OrderBy(n => n.Id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении списка всех городов");
+                return Enumerable.Empty<City>();
+            }
+        }
+
+        public async Task<City?> GetCityByPageNameAsync(string pageName)
+        {
+            if (string.IsNullOrWhiteSpace(pageName))
+            {
+                _logger.LogWarning("Попытка получить город с пустым PageName.");
+                return null;
+            }
+
+            string normalizedPageName = pageName.Trim().ToLowerInvariant();
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                var city = await context.Cities.FirstOrDefaultAsync(n => n.PageName.ToLower() == normalizedPageName);
+
+                if (city == null)
+                    _logger.LogInformation("Город с PageName '{PageName}' не найден.", pageName);
+
+                return city;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении города по PageName: {PageName}", pageName);
+                return null;
+            }
+        }
 
         public async Task<IEnumerable<City>> GetVisibleCityAsync()
-            => await _context.CreateDbContext().Cities.Where(n => n.PageVisible).OrderBy(n => n.Id).ToListAsync();
+        {
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                return await context.Cities
+                    .Where(n => n.PageVisible)
+                    .OrderBy(n => n.Id)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении видимых городов.");
+                return Enumerable.Empty<City>();
+            }
+        }
     }
 }
