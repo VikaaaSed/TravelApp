@@ -37,19 +37,6 @@ namespace TravelApp.API.Controllers
             }
             return Ok(user);
         }
-
-        [HttpGet("GetUserByEmailAndPasswordHash")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User?>> GetUserByEmailAndPasswordHashAsync(string email, string passwordHash)
-        {
-            var user = await _userRepository.GetUserByEmailAndHashPassAsync(email, passwordHash);
-            if (user == null)
-            {
-                _logger.LogInformation("Пользователь с указанными данными не найден");
-                return NotFound($"Пользователь не найден");
-            }
-            return Ok(user);
-        }
+                
     }
 }

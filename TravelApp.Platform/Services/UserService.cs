@@ -42,5 +42,12 @@ namespace TravelApp.Platform.Services
             await CreateUserAsync(user);
             return true;
         }
+        public async Task<User?> AuthorizationUserAsync(UserAuthorization user)
+        {
+            var result = await GetUserByEmailAsync(user.Email);
+            if (result != null && _passwordHasher.VerifyPassword(user.Password, result.PasswordHash))
+                return result;
+            return null;
+        }
     }
 }

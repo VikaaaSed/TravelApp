@@ -37,5 +37,23 @@ namespace TravelApp.Platform.Controllers
             TempData["SuccessMessage"] = "Регистрация прошла успешно!";
             return View();
         }
+        [HttpGet]
+        public IActionResult Authorization()
+        {
+            ModelState.Clear();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Authorization(UserAuthorization user)
+        {
+            if (!ModelState.IsValid)
+                return View(user);
+            if (await _userService.AuthorizationUserAsync(user) == null)
+            {
+                ModelState.AddModelError("", "Пользователь не найден. Возможно неверно указан логин или пароль.");
+                return View(user);
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

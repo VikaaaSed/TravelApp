@@ -54,20 +54,6 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
-        public async Task<User?> GetUserByEmailAndHashPassAsync(string email, string hashPassword)
-        {
-            string normalizedEmail = email.Trim().ToLowerInvariant();
-            await using var context = await _context.CreateDbContextAsync();
-            try
-            {
-                return await context.Users.FirstOrDefaultAsync(x =>
-                x.Email == normalizedEmail && x.PasswordHash == hashPassword);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Пользователь не найден");
-                return null;
-            }
-        }
+        
     }
 }

@@ -1,50 +1,33 @@
-﻿@model TravelApp.Platform.Models.UserRegistration
+﻿@model TravelApp.Platform.Models.UserAuthorization
 @{
-    ViewData["Title"] = "Регистрация";
+    ViewData["Title"] = "Авторизация";
 }
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+<div class="text-center">
+    <h1 class="display-4">Авторизация</h1>
+    <div class=" @(ViewData["Authorization_Error"] != null ? "alert alert-danger" : "collapse")">
+        <strong>Ошибка</strong> @ViewData["Authorization_Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-}
-<div asp-validation-summary="All" class="alert alert-danger"></div>
-
-<form novalidate asp-controller="User" asp-action="Registration" class="d-flex justify-content-center" style="height: 100vh;">
+</div>
+<div asp-validation-summary="All" class="alert alert-danger">Пользователь не найден! Неверно введен логин или пароль</div>
+<form asp-controller="User" asp-action="Authorization" class="d-flex justify-content-center" style="height: 100vh;">
     <div class="form-group">
 
-        <label class="control-label">Имя</label>
-        <input asp-for="FirstName" class="form-control mb-1" />
-        <span asp-validation-for="FirstName" class="text-danger d-block" style="min-height: 20px;"></span>
-
-        <label class="control-label">Фамилия</label>
-        <input asp-for="LastName" class="form-control mb-1" />
-        <span asp-validation-for="LastName" class="text-danger d-block" style="min-height: 20px;"></span>
-
-        <label class="control-label">Возраст</label>
-        <input asp-for="Age" min="10" max="90" class="form-control mb-1" />
-        <span asp-validation-for="Age" class="text-danger d-block" style="min-height: 20px;"></span>
-
-        <label class="control-label">Email</label>
-        <input asp-for="Email" class="form-control mb-1" />
+        <label class="control-label">Логин</label>
+        <input asp-for="Email" class="form-control mb-3" />
         <span asp-validation-for="Email" class="text-danger d-block" style="min-height: 20px;"></span>
 
         <label class="control-label">Пароль</label>
-        <input asp-for="Password" type="password" class="form-control mb-1" />
+        <input asp-for="Password" type="password" class="form-control mb-3" />
         <span asp-validation-for="Password" class="text-danger d-block" style="min-height: 20px;"></span>
 
-        <label class="control-label">Повторите пароль</label>
-        <input asp-for="RepeatPassword" type="password" class="form-control mb-1" />
-        <span asp-validation-for="RepeatPassword" class="text-danger d-block" style="min-height: 20px;"></span>
+        <input type="submit" value="Вход" class="btn btn-primary w-100" disabled/>
 
-        <input type="submit" value="Зарегистрироваться" class="btn btn-primary w-100" disabled />
-        <a asp-action="Authorization">Авторизоваться</a>
+        <a asp-action="Registration">Зарегистрироваться</a>
     </div>
 </form>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script>
         $(document).ready(function () {
             var form = $("form");
