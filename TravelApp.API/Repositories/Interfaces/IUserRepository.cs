@@ -6,5 +6,6 @@ namespace TravelApp.API.Repositories.Interfaces
     {
         public Task<User> CreateAsync(User user);
         public Task<User?> GetUserByEmailAsync(string email);
+        public Task<User?> GetUserByEmailAndHashPassAsync(string email, string hashPassword);
     }
 }
