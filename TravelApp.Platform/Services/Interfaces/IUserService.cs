@@ -8,6 +8,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<bool> RegistrationUserAsync(UserRegistration user);
         public Task<User> CreateUserAsync(UserRegistration user);
         public Task<User?> GetUserByEmailAsync(string email);
-        public Task<User?> AuthorizationUserAsync(UserAuthorization user);
+        public Task<string?> AuthorizationUserAsync(UserAuthorization user);
     }
 }

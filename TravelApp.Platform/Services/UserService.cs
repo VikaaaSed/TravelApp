@@ -10,12 +10,14 @@ namespace TravelApp.Platform.Services
         private readonly UserHttpClient _userHttpClient;
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IJwtTokenService _jwtTokenService;
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
             _passwordHasher = passwordHasher;
+            _jwtTokenService = jwtTokenService;
         }
         public async Task<User> CreateUserAsync(UserRegistration userRegistration)
         {
@@ -42,11 +44,11 @@ namespace TravelApp.Platform.Services
             await CreateUserAsync(user);
             return true;
         }
-        public async Task<User?> AuthorizationUserAsync(UserAuthorization user)
+        public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
         {
             var result = await GetUserByEmailAsync(user.Email);
             if (result != null && _passwordHasher.VerifyPassword(user.Password, result.PasswordHash))
-                return result;
+                return _jwtTokenService.GenerateToken(result.Email, result.UserType);
             return null;
         }
     }
