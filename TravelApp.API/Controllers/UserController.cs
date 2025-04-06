@@ -50,7 +50,19 @@ namespace TravelApp.API.Controllers
             }
             return Ok(user);
         }
-
+        [HttpPut("Update")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Update([FromBody] User user)
+        {
+            if (await _userRepository.GetUserByIdAsync(user.Id) == null)
+            {
+                _logger.LogInformation("Пользователь с id {id} не найден", user.Id);
+                return NotFound($"Пользователь с id {user.Id} не найден");
+            }
+            await _userRepository.UpdateAsync(user);
+            return Ok(user);
+        }
 
     }
 }
