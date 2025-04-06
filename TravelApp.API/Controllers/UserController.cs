@@ -37,6 +37,20 @@ namespace TravelApp.API.Controllers
             }
             return Ok(user);
         }
-                
+        [HttpGet("GetUserById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Get(int id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                _logger.LogInformation("Пользователь с id {id} не найден", id);
+                return NotFound($"Пользователь с id {id} не найден");
+            }
+            return Ok(user);
+        }
+
+
     }
 }

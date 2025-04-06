@@ -54,6 +54,19 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
-        
+
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении пользователя по id: {Id}", id);
+                return null;
+            }
+        }
     }
 }
