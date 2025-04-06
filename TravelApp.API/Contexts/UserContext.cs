@@ -24,6 +24,7 @@ namespace TravelApp.API.Contexts
                 entity.Property("Email").HasColumnName("email");
                 entity.Property("PasswordHash").HasColumnName("passwordhash");
                 entity.Property("Age").HasColumnName("age");
+                entity.Property("UserType").HasColumnName("typeuser");
                 entity.Property("RegistrationIp").HasColumnName("registrationip");
                 entity.Property("LastIp").HasColumnName("lastip");
             });

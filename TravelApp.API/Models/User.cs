@@ -8,6 +8,7 @@
         public required string Email { get; set; }
         public required string PasswordHash { get; set; }
         public required int Age { get; set; }
+        public bool UserType {  get; set; }
         public required string RegistrationIp { get; set; }
         public required string LastIp { get; set; }
 
