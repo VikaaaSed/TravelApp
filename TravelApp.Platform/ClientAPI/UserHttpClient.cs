@@ -74,5 +74,25 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task UpdateUserAsync(API.Models.User user)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/User/Update", user);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при обновлении пользователя: {response.StatusCode} - {responseContent}");
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Произошла ошибка при отправке запроса");
+                throw;
+            }
+        }
+
     }
 }

@@ -48,8 +48,16 @@ namespace TravelApp.Platform.Services
         {
             var result = await GetUserByEmailAsync(user.Email);
             if (result != null && _passwordHasher.VerifyPassword(user.Password, result.PasswordHash))
+            {
+                result.LastIp = _clientIpService.GetClientIp();
+                await UpdateUserAsync(result);
                 return _jwtTokenService.GenerateToken(result.Email, result.UserType);
+            }
             return null;
         }
+
+
+        public async Task UpdateUserAsync(User user)
+            => await _userHttpClient.UpdateUserAsync(user);
     }
 }

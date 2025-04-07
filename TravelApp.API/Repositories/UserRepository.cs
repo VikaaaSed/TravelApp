@@ -81,6 +81,7 @@ namespace TravelApp.API.Repositories
                     oldUser.LastName = user.LastName;
                     oldUser.UserType = user.UserType;
                     oldUser.Age = user.Age;
+                    oldUser.PasswordHash = user.PasswordHash;
                     oldUser.Email = user.Email;
                     oldUser.LastIp = user.LastIp;
                     await context.SaveChangesAsync();
