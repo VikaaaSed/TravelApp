@@ -11,13 +11,15 @@ namespace TravelApp.Platform.Controllers
         private readonly ILogger<LocationController> _logger;
         private readonly ILocationService _locationService;
         private readonly IClientIpService _clientIpService;
+        private readonly IJwtTokenService _jwtTokenService;
 
         public LocationController(ILogger<LocationController> logger, ILocationService cityService, 
-            IClientIpService clientIpService)
+            IClientIpService clientIpService, IJwtTokenService jwtTokenService)
         {
             _logger = logger;
             _locationService = cityService;
             _clientIpService = clientIpService;
+            _jwtTokenService = jwtTokenService;
         }
         public async Task<IActionResult> Index(string pageName)
         {
@@ -25,7 +27,16 @@ namespace TravelApp.Platform.Controllers
 
             if (location == null)
                 return NotFound();
-
+            if (User.Identity.IsAuthenticated)
+            {
+                var token = Request.Cookies["jwt_token"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var name = _jwtTokenService.GetNameUserFromToken(token);
+                    if (!string.IsNullOrEmpty(name))
+                        ViewData["FIO"] = name;
+                }
+            }
             return View(location);
         }
 
@@ -39,6 +50,16 @@ namespace TravelApp.Platform.Controllers
         {
             model.SenderIpAddress = _clientIpService.GetClientIp();
             model.DateTime = DateTime.UtcNow;
+            if (User.Identity.IsAuthenticated)
+            {
+                var token = Request.Cookies["jwt_token"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var id = _jwtTokenService.GetUserIdFromToken(token);
+                    if (!string.IsNullOrEmpty(id) && int.TryParse(id, out int userId))
+                        model.IdUser = userId;
+                }
+            }
             Feedback feedback = await _locationService.CreateFeedbackAsync(model);
             return RedirectToAction("Index", new { pageName });
         }

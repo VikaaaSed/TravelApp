@@ -51,7 +51,8 @@ namespace TravelApp.Platform.Services
             {
                 result.LastIp = _clientIpService.GetClientIp();
                 await UpdateUserAsync(result);
-                return _jwtTokenService.GenerateToken(result.Email, result.UserType);
+                return _jwtTokenService.GenerateToken(result.Email, result.UserType, result.Id, $"{result.FirstName} {result.LastName}");
+
             }
             return null;
         }
