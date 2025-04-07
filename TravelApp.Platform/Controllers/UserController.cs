@@ -69,5 +69,10 @@ namespace TravelApp.Platform.Controllers
             });
             return RedirectToAction("Index");
         }
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt_token");
+            return RedirectToAction("Authorization");
+        }
     }
 }
