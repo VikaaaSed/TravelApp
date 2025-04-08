@@ -2,9 +2,9 @@
 {
     public interface IJwtTokenService
     {
-        string GenerateToken(string email, bool role, int id, string flname);
-        string? GetUserIdFromToken(string token);
-        string? GetNameUserFromToken(string token);
+        public string GenerateToken(string email, bool role, int id, string flname);
+        public string? GetUserIdFromToken(string token);
+        public string? GetUserEmailFromToken(string token);
+        public string? GetNameUserFromToken(string token);
     }
-
 }

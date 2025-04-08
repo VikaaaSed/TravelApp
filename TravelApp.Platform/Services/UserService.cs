@@ -19,6 +19,19 @@ namespace TravelApp.Platform.Services
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
         }
+
+        public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
+        {
+            var result = await GetUserByEmailAsync(user.Email);
+            if (result != null && _passwordHasher.VerifyPassword(user.Password, result.PasswordHash))
+            {
+                result.LastIp = _clientIpService.GetClientIp();
+                await UpdateUserAsync(result);
+                return _jwtTokenService.GenerateToken(result.Email, result.UserType, result.Id, $"{result.FirstName} {result.LastName}");
+            }
+            return null;
+        }
+
         public async Task<User> CreateUserAsync(UserRegistration userRegistration)
         {
             var newUser = new User
@@ -37,6 +50,14 @@ namespace TravelApp.Platform.Services
         public async Task<User?> GetUserByEmailAsync(string email)
             => await _userHttpClient.GetUserByEmailAsync(email);
 
+        public async Task<User?> GetUserByTokenAsync(string token)
+        {
+            string email = _jwtTokenService.GetUserEmailFromToken(token) ?? "";
+            if (!string.IsNullOrEmpty(email))
+                return await _userHttpClient.GetUserByEmailAsync(email) ?? null;
+            return null;
+        }
+
         public async Task<bool> RegistrationUserAsync(UserRegistration user)
         {
             var result = await GetUserByEmailAsync(user.Email);
@@ -44,19 +65,6 @@ namespace TravelApp.Platform.Services
             await CreateUserAsync(user);
             return true;
         }
-        public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
-        {
-            var result = await GetUserByEmailAsync(user.Email);
-            if (result != null && _passwordHasher.VerifyPassword(user.Password, result.PasswordHash))
-            {
-                result.LastIp = _clientIpService.GetClientIp();
-                await UpdateUserAsync(result);
-                return _jwtTokenService.GenerateToken(result.Email, result.UserType, result.Id, $"{result.FirstName} {result.LastName}");
-
-            }
-            return null;
-        }
-
 
         public async Task UpdateUserAsync(User user)
             => await _userHttpClient.UpdateUserAsync(user);

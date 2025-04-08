@@ -10,5 +10,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<User?> GetUserByEmailAsync(string email);
         public Task<string?> AuthorizationUserAsync(UserAuthorization user);
         public Task UpdateUserAsync(User user);
+        public Task<User?> GetUserByTokenAsync(string token);
     }
 }
