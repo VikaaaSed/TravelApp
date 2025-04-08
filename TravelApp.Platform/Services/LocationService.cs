@@ -11,18 +11,39 @@ namespace TravelApp.Platform.Services
         private readonly LocationGalleryHttpClient _locationGalleryHttpClient;
         private readonly FeedbackViewHttpClient _feedbackViewHttpClient;
         private readonly FeedbackHttpClient _feedbackHttpClient;
+        private readonly IClientIpService _clientIpService;
+        private readonly IJwtTokenService _jwtTokenService;
         public LocationService(LocationViewHttpClient locationViewHttpClient,
             LocationGalleryHttpClient locationGalleryHttpClient,
             FeedbackViewHttpClient feedbackViewHttpClient,
-            FeedbackHttpClient feedbackHttpClient)
+            FeedbackHttpClient feedbackHttpClient,
+            IClientIpService clientIpService, IJwtTokenService jwtTokenService)
         {
             _locationViewHttpClient = locationViewHttpClient;
             _locationGalleryHttpClient = locationGalleryHttpClient;
             _feedbackViewHttpClient = feedbackViewHttpClient;
             _feedbackHttpClient = feedbackHttpClient;
+            _clientIpService = clientIpService;
+            _jwtTokenService = jwtTokenService;
         }
         public async Task<Feedback> CreateFeedbackAsync(Feedback feedback)
-            => await _feedbackHttpClient.CreateFeedbackAsync(feedback);
+        {
+            feedback.SenderIpAddress = _clientIpService.GetClientIp();
+            feedback.DateTime = DateTime.UtcNow;
+            return await _feedbackHttpClient.CreateFeedbackAsync(feedback);
+        }
+
+        public async Task<Feedback> CreateFeedbackAsync(Feedback feedback, string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                var id = _jwtTokenService.GetUserIdFromToken(token);
+                if (!string.IsNullOrEmpty(id) && int.TryParse(id, out int userId))
+                    feedback.IdUser = userId;
+            }
+            return await CreateFeedbackAsync(feedback);
+        }
+
         public async Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName)
         {
             LocationInHomePage location = await GetLocationInHomePageByPageNameAsync(pageName);
@@ -45,5 +66,8 @@ namespace TravelApp.Platform.Services
 
         public async Task<LocationInHomePage> GetLocationInHomePageByPageNameAsync(string pageName)
             => await _locationViewHttpClient.GetLocationByPageNameAsync(pageName);
+
+        public string? GetUserFirstAndLastName(string token)
+            => (!string.IsNullOrEmpty(token)) ? _jwtTokenService.GetNameUserFromToken(token) : null;
     }
 }
