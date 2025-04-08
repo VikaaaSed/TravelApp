@@ -29,8 +29,18 @@
                         </li>
                     </ul>
                 </div>
-                <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Authorization">Вход/Регистрация</a>
-
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a class="navbar-brand" asp-controller="User" asp-action="Profile">Профиль</a>
+                    <form method="post" asp-controller="User" asp-action="Logout" class="d-inline">
+                        <button type="submit" class="btn btn-link navbar-brand">Выйти</button>
+                    </form>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-controller="User" asp-action="Authorization">Вход</a>
+                    <a class="navbar-brand" asp-controller="User" asp-action="Registration">Регистрация</a>
+                }
             </div>
         </nav>
     </header>
