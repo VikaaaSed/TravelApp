@@ -3,13 +3,12 @@
     ViewData["Title"] = "Авторизация";
 }
 <div class="text-center">
-    <h1 class="display-4">Авторизация</h1>
-    <div class=" @(ViewData["Authorization_Error"] != null ? "alert alert-danger" : "collapse")">
-        <strong>Ошибка</strong> @ViewData["Authorization_Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <h1 class="display-4">Авторизация</h1>    
 </div>
-<div asp-validation-summary="All" class="alert alert-danger">Пользователь не найден! Неверно введен логин или пароль</div>
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
 <form asp-controller="User" asp-action="Authorization" class="d-flex justify-content-center" style="height: 100vh;">
     <div class="form-group">
 
@@ -52,7 +51,6 @@
             $.validator.unobtrusive.parse(form);
 
             $(".text-danger").hide();
-            validationSummary.hide();
             submitButton.prop("disabled", false);
 
             var fieldInteractions = {};

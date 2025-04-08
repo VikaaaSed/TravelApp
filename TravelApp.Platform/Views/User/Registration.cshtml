@@ -2,14 +2,19 @@
 @{
     ViewData["Title"] = "Регистрация";
 }
-
+<div class="text-center">
+    <h1 class="display-4">Регистрация</h1>
+</div>
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
 }
-<div asp-validation-summary="All" class="alert alert-danger"></div>
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
 
 <form novalidate asp-controller="User" asp-action="Registration" class="d-flex justify-content-center" style="height: 100vh;">
     <div class="form-group">
@@ -69,7 +74,6 @@
             $.validator.unobtrusive.parse(form);
 
             $(".text-danger").hide();
-            validationSummary.hide();
             submitButton.prop("disabled", false);
 
             var fieldInteractions = {};
