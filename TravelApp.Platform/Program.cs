@@ -4,29 +4,44 @@ using TravelApp.Platform.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Options;
+using TravelApp.Platform.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+var env = builder.Environment;
+if (env.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+// Добавление конфигурации для JwtSettings до остальных сервисов
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+// Добавление сервисов и аутентификации
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+
+// Добавление аутентификации и JWT Bearer
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
+    var jwtSettings = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<JwtSettings>>().Value;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
     };
+
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -40,8 +55,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Добавление HTTP-клиентов
 builder.Services.AddHttpClient();
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<CityHttpClient>();
 builder.Services.AddHttpClient<CityViewHttpClient>();
 builder.Services.AddHttpClient<LocationViewHttpClient>();
@@ -50,6 +65,7 @@ builder.Services.AddHttpClient<FeedbackViewHttpClient>();
 builder.Services.AddHttpClient<FeedbackHttpClient>();
 builder.Services.AddHttpClient<UserHttpClient>();
 
+// Регистрация сервисов
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
@@ -64,7 +80,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
