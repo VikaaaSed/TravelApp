@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TravelApp.Platform.Controllers
+namespace TravelApp.Platform.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class AdminPanel : Controller
     {
@@ -15,7 +16,7 @@ namespace TravelApp.Platform.Controllers
         public IActionResult Logout()
         {
             Response.Cookies.Delete("jwt_token");
-            return RedirectToAction("Authorization", "User");
+            return RedirectToAction("Authorization", "User", new { area = "" });
         }
     }
 }
