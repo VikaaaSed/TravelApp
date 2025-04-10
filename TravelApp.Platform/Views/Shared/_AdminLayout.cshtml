@@ -7,46 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Attractions.styles.css" asp-append-version="true" />
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            min-height: 0;
-        }
-
-        #sidebar {
-            width: 250px;
-            background-color: #f8f9fa;
-            padding: 1rem;
-        }
-
-        #main {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        footer {
-            background: linear-gradient(to right, #a2d4f5, #d2e5f3);
-        }
-
-        .cat {
-            display: inline-block;
-            font-family: monospace;
-            white-space: pre;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/admin-layout.css" asp-append-version="true" />
 </head>
 <body>
     <!-- Контент + боковая панель -->
@@ -61,7 +22,14 @@
                 <li class="nav-item"><a class="nav-link" href="#">Комментарии</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Пользователи</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Настройки</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Выход</a></li>
+                <li class="nav-item">
+                    <form asp-controller="AdminPanel" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-link btn btn-link p-0" style="color: #0d6efd; text-decoration: none;">
+                            Выход
+                        </button>
+                    </form>
+                </li>
             </ul>
         </nav>
 

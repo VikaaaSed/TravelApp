@@ -10,5 +10,12 @@ namespace TravelApp.Platform.Controllers
         {
             return View();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt_token");
+            return RedirectToAction("Authorization", "User");
+        }
     }
 }
