@@ -91,6 +91,25 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated && context.Request.Path == "/")
+    {
+        if (context.User.IsInRole("Admin"))
+        {
+            context.Response.Redirect("/AdminPanel/Index");
+            return;
+        }
+        else
+        {
+            context.Response.Redirect("/Home/Index");
+            return;
+        }
+    }
+
+    await next();
+});
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

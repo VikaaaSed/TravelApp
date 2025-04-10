@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Attractions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Attractions.styles.css" asp-append-version="true" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+        }
+
+        #main {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        footer {
+            background: linear-gradient(to right, #a2d4f5, #d2e5f3);
+        }
+
+        .cat {
+            display: inline-block;
+            font-family: monospace;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <!-- Контент + боковая панель -->
+    <div class="content-wrapper">
+        <!-- Боковая панель -->
+        <nav id="sidebar">
+            <h3>Меню</h3>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="#">Профиль</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Города</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Места</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Комментарии</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Пользователи</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Настройки</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Выход</a></li>
+            </ul>
+        </nav>
+
+        <!-- Основной контент -->
+        <main id="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Футер -->
+    <footer class="border-top mb-0 footer text-muted background-gradient">
+        <div class="container">
+            <span class="cat">                 /\_/\
+                ( o.o )
+                 = ^ =
+            </span>
+            &copy; 2025 - Сайт выполнен в качестве задания на диссертацию
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
