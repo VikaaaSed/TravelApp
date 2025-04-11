@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Options;
 using TravelApp.Platform.Models;
+using TravelApp.Platform.Areas.Admin.Services.Interfaces;
+using TravelApp.Platform.Areas.Admin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +75,7 @@ builder.Services.AddScoped<IClientIpService, ClientIpService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IAdminCityService, AdminCityService>();
 
 var app = builder.Build();
 

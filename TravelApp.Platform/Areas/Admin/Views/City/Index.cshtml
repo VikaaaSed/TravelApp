@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TravelApp.API.Models.City>
+
+<h2>Города</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">Добавить город</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Изображение (Основное)</th>
+            <th>Изображение (Дополнительное)</th>
+            <th>Название страницы</th>
+            <th>Отображать</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var city in Model)
+        {
+            <tr>
+                <td>@city.Id</td>
+                <td>@city.Title</td>
+                <td>@(city.Description.Length > 20 ? city.Description.Substring(0, 17) + " ..." : city.Description)</td>
+                <td>@city.PictureAtHomeLink</td>
+                <td>@city.MainPictureLink</td>
+                <td>@city.PageName</td>
+                <td>@(city.PageVisible ? "Да" : "Нет")</td>
+                <td>
+                    <a href="#" asp-route-id="@city.Id" class="btn btn-primary btn-sm">Редактировать</a>
+                    <a href="#" asp-route-id="@city.Id" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Удалить город?');">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <caption>>:^) Всего: @Model.Count()</caption>
+</table>

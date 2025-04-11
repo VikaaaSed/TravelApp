@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TravelApp.API.Models;
-using TravelApp.Platform.ClientAPI;
 using TravelApp.Platform.Models;
 using TravelApp.Platform.Services.Interfaces;
 
