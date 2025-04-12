@@ -4,8 +4,10 @@ namespace TravelApp.API.Repositories.Interfaces
 {
     public interface ICityRepository
     {
-        Task<IEnumerable<City>> GetAllAsync();
-        Task<IEnumerable<City>> GetVisibleCityAsync();
-        Task<City?> GetCityByPageNameAsync(string PageName);
+        public Task<IEnumerable<City>> GetAllAsync();
+        public Task<IEnumerable<City>> GetVisibleCityAsync();
+        public Task<City?> GetCityByPageNameAsync(string PageName);
+        public Task<City> CreateCityAsync(City city);
+
     }
 }

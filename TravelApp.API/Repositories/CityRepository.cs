@@ -75,5 +75,33 @@ namespace TravelApp.API.Repositories
                 return Enumerable.Empty<City>();
             }
         }
+        public async Task<City> CreateCityAsync(City city)
+        {
+            if (city == null)
+            {
+                _logger.LogWarning("Попытка создания города с пустым объектом.");
+                throw new ArgumentNullException(nameof(city));
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                await context.Cities.AddAsync(city);
+                await context.SaveChangesAsync();
+                _logger.LogInformation("Город успешно создан. ID: {cityId}", city.Id);
+
+                return city;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении города: {City}", city);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при создании города.");
+                throw;
+            }
+        }
+
     }
 }

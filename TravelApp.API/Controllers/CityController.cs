@@ -30,5 +30,15 @@ namespace TravelApp.API.Controllers
         [HttpGet("GetCityByPageName")]
         public async Task<ActionResult<City?>> GetCityByPageNameAsync(string pageName)
             => Ok(await _repository.GetCityByPageNameAsync(pageName));
+        [HttpPost("Create")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<City>> Create([FromBody] City city)
+        {
+            if (city == null) return BadRequest();
+            City createdCity = await _repository.CreateCityAsync(city);
+            return CreatedAtAction(nameof(Create), createdCity); ;
+        }
+
     }
 }
