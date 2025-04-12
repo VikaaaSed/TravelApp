@@ -48,6 +48,16 @@ namespace TravelApp.API.Controllers
             await _repository.UpdateCityAsync(city);
             return NoContent();
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<City>> Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+            await _repository.DeleteCityAsync(id);
+            return NoContent();
+        }
+
 
     }
 }

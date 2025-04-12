@@ -9,5 +9,6 @@ namespace TravelApp.API.Repositories.Interfaces
         public Task<City?> GetCityByPageNameAsync(string PageName);
         public Task<City> CreateCityAsync(City city);
         public Task UpdateCityAsync(City city);
+        public Task DeleteCityAsync(int id);
     }
 }

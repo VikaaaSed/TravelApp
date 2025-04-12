@@ -142,6 +142,36 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task DeleteCityAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка удалении город с некорректным Id: {id}", id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var city = await context.Cities.SingleOrDefaultAsync(c => c.Id == id);
+                if (city == null)
+                {
+                    _logger.LogWarning("Попытка удаления несуществующего города с id: {id}", id);
+                    return;
+                }
+                context.Cities.Remove(city);
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при удалении города с id: {id}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при удалении города по id: {id}", id);
+                throw;
+            }
+        }
 
     }
 }
