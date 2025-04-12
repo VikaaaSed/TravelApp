@@ -8,6 +8,6 @@ namespace TravelApp.API.Repositories.Interfaces
         public Task<IEnumerable<City>> GetVisibleCityAsync();
         public Task<City?> GetCityByPageNameAsync(string PageName);
         public Task<City> CreateCityAsync(City city);
-
+        public Task UpdateCityAsync(City city);
     }
 }

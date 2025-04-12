@@ -102,6 +102,46 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task UpdateCityAsync(City city)
+        {
+            if (city.Id <= 0)
+            {
+                _logger.LogWarning("Попытка обновить город с некорректным Id: {id}", city.Id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            await using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+
+                var oldCity = await context.Cities.SingleOrDefaultAsync(u => u.Id == city.Id);
+                if (oldCity == null)
+                {
+                    _logger.LogWarning("Попытка обновить несуществующий город с id: {id}", city.Id);
+                    return;
+                }
+                oldCity.Title = city.Title;
+                oldCity.Description = city.Description;
+                oldCity.MainPictureLink = city.MainPictureLink;
+                oldCity.PictureAtHomeLink = city.PictureAtHomeLink;
+                oldCity.PageName = city.PageName;
+                oldCity.PageVisible = city.PageVisible;
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении изменений города с id: {id}", city.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при обновления данных о городе по id: {id}", city.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
 
     }
 }

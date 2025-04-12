@@ -39,6 +39,15 @@ namespace TravelApp.API.Controllers
             City createdCity = await _repository.CreateCityAsync(city);
             return CreatedAtAction(nameof(Create), createdCity); ;
         }
+        [HttpPut("Update")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<City>> Update([FromBody] City city)
+        {
+            if (city == null) return BadRequest();
+            await _repository.UpdateCityAsync(city);
+            return NoContent();
+        }
 
     }
 }
