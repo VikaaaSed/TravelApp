@@ -80,5 +80,84 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<API.Models.City> GetCityAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/City/{id}";
+                var response = await _httpClient.GetAsync(url);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при получении города: {response.StatusCode}");
+                }
+                return await response.Content.ReadFromJsonAsync<API.Models.City>() ?? throw new JsonException("Ошибка десериализации ответа");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetCityAsync");
+                throw;
+            }
+        }
+        public async Task DeleteCityAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/City/{id}";
+                var response = await _httpClient.DeleteAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("Ошибка удаления города. Код: {StatusCode}, Ответ: {Content}",
+                        response.StatusCode, content);
+
+                    throw new HttpRequestException($"Ошибка удаления города: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса DeleteAsync");
+                throw;
+            }
+        }
+        public async Task UpdateCityAsync(API.Models.City city)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/City", city);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при изменении города: {response.StatusCode} - {responseContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Произошла ошибка при отправке запроса UpdateCityAsync");
+                throw;
+            }
+        }
+        public async Task<API.Models.City> CreateCityAsync(API.Models.City city)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/City", city);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при создании Города: {response.StatusCode} - {responseContent}");
+                }
+                return JsonSerializer.Deserialize<API.Models.City>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Произошла ошибка при отправке запроса CreateCityAsync");
+                throw;
+            }
+        }
+
     }
 }
