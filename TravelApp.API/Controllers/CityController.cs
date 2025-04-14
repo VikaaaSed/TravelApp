@@ -30,7 +30,7 @@ namespace TravelApp.API.Controllers
         [HttpGet("GetCityByPageName")]
         public async Task<ActionResult<City?>> GetCityByPageNameAsync(string pageName)
             => Ok(await _repository.GetCityByPageNameAsync(pageName));
-        [HttpPost("Create")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<City>> Create([FromBody] City city)
@@ -39,10 +39,10 @@ namespace TravelApp.API.Controllers
             City createdCity = await _repository.CreateCityAsync(city);
             return CreatedAtAction(nameof(Create), createdCity); ;
         }
-        [HttpPut("Update")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<City>> Update([FromBody] City city)
+        public async Task<ActionResult> Update([FromBody] City city)
         {
             if (city == null) return BadRequest();
             await _repository.UpdateCityAsync(city);
