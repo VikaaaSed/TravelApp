@@ -172,6 +172,28 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task<City?> GetAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка получить город с некорректным Id: {id}", id);
+                return null;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var city = await context.Cities.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (city == null)
+                    _logger.LogInformation("Город с id '{id}' не найден.", id);
+                return city;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении города по id: {id}", id);
+                return null;
+            }
+        }
 
     }
 }
