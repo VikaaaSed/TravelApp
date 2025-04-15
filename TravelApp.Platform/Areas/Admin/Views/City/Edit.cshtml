@@ -1,0 +1,234 @@
+﻿@model TravelApp.Platform.Models.AllCityInformation
+@{
+    ViewData["Title"] = "Редактировать город";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Редактировать город</h2>
+
+    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+        <input type="hidden" asp-for="@Model.City.Id" />
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Основная информация</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="@Model.City.Title" class="form-label">Название города</label>
+                        <input asp-for="@Model.City.Title" class="form-control" />
+                        <span asp-validation-for="@Model.City.Title" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="@Model.City.PageName" class="form-label">Название страницы</label>
+                        <input asp-for="@Model.City.PageName" class="form-control" />
+                        <span asp-validation-for="@Model.City.PageName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="@Model.City.Description" class="form-label">Описание</label>
+                    <textarea asp-for="@Model.City.Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="@Model.City.Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" asp-for="@Model.City.PageVisible" id="pageVisibleSwitch">
+                    <label class="form-check-label" for="pageVisibleSwitch">Отображать страницу</label>
+                </div>
+                <div class="mb-3">
+                    <a asp-area="" asp-controller="City" asp-action="index" asp-route-pagename="@Model.City.PageName">Предпросмотр страницы</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Изображения</h5>
+            </div>
+            <div class="card-body">
+
+
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label asp-for="@Model.City.MainPictureLink" class="form-label">URL главного изображения</label>
+                        <input asp-for="@Model.City.MainPictureLink" class="form-control" id="mainPictureLinkInput" />
+                        <span asp-validation-for="@Model.City.MainPictureLink" class="text-danger"></span>
+                        <div class="form-text">Рекомендуемый размер: 1200×800px</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="image-preview-container">
+                            <img id="mainPictureImagePreview"
+                                 src="@(!string.IsNullOrEmpty(Model.City?.MainPictureLink) ? Model.City.MainPictureLink : "#")"
+                                 alt="Превью главного изображения"
+                                 class="img-thumbnail img-fluid"
+                                 style="@(!string.IsNullOrEmpty(Model.City?.MainPictureLink) ? "" : "display: none;")" />
+                            <div class="loading-spinner" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label asp-for="@Model.City.PictureAtHomeLink" class="form-label">URL домашнего изображения</label>
+                        <input asp-for="@Model.City.PictureAtHomeLink" class="form-control" id="pictureAtHomeLinkInput" />
+                        <span asp-validation-for="@Model.City.PictureAtHomeLink" class="text-danger"></span>
+                        <div class="form-text">Рекомендуемый размер: 800×600px</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="image-preview-container">
+                            <img id="pictureAtHomeLinkImagePreview"
+                                 src="@(!string.IsNullOrEmpty(Model.City?.PictureAtHomeLink) ? Model.City.PictureAtHomeLink : "#")"
+                                 alt="Превью домашнего изображения"
+                                 class="img-thumbnail img-fluid"
+                                 style="@(!string.IsNullOrEmpty(Model.City?.PictureAtHomeLink) ? "" : "display: none;")" />
+                            <div class="loading-spinner" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Локации</h5>
+            </div>
+            <a href="#" class="btn btn-success mb-3">Добавить локацию</a>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Название</th>
+                                <th>Название страницы</th>
+                                <th>Ссылка на картинку</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var location in Model.Locations)
+                            {
+                                <tr>
+
+                                    <td>@location.Id</td>
+                                    <td>@location.Title</td>
+                                    <td>@location.PageName</td>
+                                    <td>@location.PictureLink</td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary btn-sm">Редактировать</a>
+                                        <a href="#" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Удалить город?');">Удалить</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Назад к списку
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Сохранить изменения
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Styles {
+    <style>
+
+        .table th {
+            white-space: nowrap;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table .btn-group {
+            white-space: nowrap;
+        }
+
+        .image-preview-container {
+            position: relative;
+            border: 1px dashed #ddd;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            background-color: #f8f9fa;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .img-thumbnail {
+            max-height: 200px;
+            object-fit: contain;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function setupImagePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const spinner = preview.closest('.image-preview-container').querySelector('.loading-spinner');
+
+            if (!input || !preview) return;
+
+            const updatePreview = (url) => {
+                url = (url || '').trim();
+
+                if (url) {
+                    // Показываем спиннер загрузки
+                    preview.style.display = 'none';
+                    spinner.style.display = 'block';
+
+                    const tempImg = new Image();
+                    tempImg.onload = () => {
+                        preview.src = url;
+                        preview.style.display = 'block';
+                        spinner.style.display = 'none';
+                    };
+                    tempImg.onerror = () => {
+                        preview.style.display = 'none';
+                        spinner.style.display = 'none';
+                        preview.closest('.image-preview-container').classList.add('bg-danger', 'bg-opacity-10');
+                        setTimeout(() => {
+                            preview.closest('.image-preview-container').classList.remove('bg-danger', 'bg-opacity-10');
+                        }, 2000);
+                    };
+                    tempImg.src = url;
+                } else {
+                    preview.style.display = 'none';
+                    spinner.style.display = 'none';
+                }
+            };
+
+            updatePreview(input.value);
+            input.addEventListener('input', () => updatePreview(input.value));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setupImagePreview('mainPictureLinkInput', 'mainPictureImagePreview');
+            setupImagePreview('pictureAtHomeLinkInput', 'pictureAtHomeLinkImagePreview');
+        });
+    </script>
+}
+

@@ -28,10 +28,11 @@
                 <td>@city.PageName</td>
                 <td>@(city.PageVisible ? "Да" : "Нет")</td>
                 <td>
-                    <a href="#" asp-route-id="@city.Id" class="btn btn-primary btn-sm">Редактировать</a>
-                    <a href="#" asp-route-id="@city.Id" class="btn btn-danger btn-sm"
+                    <a asp-area="Admin" asp-controller="City" asp-action="Edit" asp-route-id="@city.Id" class="btn btn-primary btn-sm">Редактировать</a>
+                    <a href="#" class="btn btn-danger btn-sm"
                        onclick="return confirm('Удалить город?');">Удалить</a>
                 </td>
+
             </tr>
         }
     </tbody>
