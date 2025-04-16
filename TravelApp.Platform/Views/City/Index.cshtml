@@ -7,12 +7,7 @@
     <img class="city-main-img" src="@Model.City.MainPictureLink" alt="@Model.City.Title" />
     <div class="mx-5">
         <h1 class="kiwi-maru-regular text-center my-5">Немного из истории</h1>
-        @foreach (var row in Model.City.Description.Split("\t"))
-        {
-            <p>
-                @row
-            </p>
-        }
+        @Html.Raw(Model.City.Description)
     </div>
 </div>
 <div class="items py-5 text-center">

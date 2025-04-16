@@ -39,5 +39,9 @@ namespace TravelApp.Platform.Areas.Admin.Services
         }
         public async Task UpdateCityAsync(City city)
             => await _cityHttpClient.UpdateCityAsync(city);
+
+        public async Task<City?> GetCityByPageNameAsync(string pageName)
+            => await _cityHttpClient.GetCityByPageNameAsync(pageName);
+
     }
 }

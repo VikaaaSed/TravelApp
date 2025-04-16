@@ -55,7 +55,7 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
-        public async Task<API.Models.City> GetCityByPageNameAsync(string pageName)
+        public async Task<API.Models.City?> GetCityByPageNameAsync(string pageName)
         {
             try
             {
@@ -64,6 +64,9 @@ namespace TravelApp.Platform.ClientAPI
                     url += $"?pageName={Uri.EscapeDataString(pageName)}";
 
                 var response = await _httpClient.GetAsync(url);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -71,8 +74,11 @@ namespace TravelApp.Platform.ClientAPI
                     _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
                     throw new HttpRequestException($"Ошибка при получении города: {response.StatusCode}");
                 }
-
-                return await response.Content.ReadFromJsonAsync<API.Models.City>() ?? throw new JsonException("Ошибка десериализации ответа");
+                if (string.IsNullOrWhiteSpace(responseContent)) return null;
+                return JsonSerializer.Deserialize<API.Models.City>(responseContent, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
             }
             catch (Exception ex)
             {
@@ -80,6 +86,7 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+
         public async Task<API.Models.City> GetCityAsync(int id)
         {
             try
