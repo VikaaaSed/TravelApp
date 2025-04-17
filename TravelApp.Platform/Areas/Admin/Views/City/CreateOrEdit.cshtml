@@ -241,10 +241,18 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             ClassicEditor
-                .create(document.querySelector('#description'))
+                .create(document.querySelector('#description'), {
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'underline', 'strikethrough', 'removeFormat', '|',
+                        'link', 'bulletedList', 'numberedList', '|',
+                        'undo', 'redo', 'alignment'
+                    ]
+                })
                 .catch(error => {
                     console.error(error);
                 });
         });
     </script>
+
 }
