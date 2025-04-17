@@ -16,5 +16,10 @@ namespace TravelApp.Platform.Services
             var result = await _cityViewHttpClient.GetAllAsync();
             return result.ToList();
         }
+        public async Task<List<CityInHomePage>> GetVisibleCityAsync()
+        {
+            var result = await _cityViewHttpClient.GetVisibleAsync();
+            return result.ToList();
+        }
     }
 }

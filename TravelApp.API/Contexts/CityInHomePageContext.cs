@@ -22,6 +22,7 @@ namespace TravelApp.API.Contexts
                 entity.Property("Title").HasColumnName("title");
                 entity.Property("PictureLink").HasColumnName("picturelink");
                 entity.Property("PageName").HasColumnName("pagename");
+                entity.Property("VisiblePage").HasColumnName("pagevisible");
             });
         }
     }

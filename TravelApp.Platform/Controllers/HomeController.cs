@@ -18,7 +18,7 @@ namespace TravelApp.Platform.Controllers
         {
             if (User.IsInRole("Admin"))
                 return RedirectToAction("Index", "AdminPanel", new { area = "Admin" });
-            return View(await _homeService.GetAllCityAsync());
+            return View(await _homeService.GetVisibleCityAsync());
         }
         public IActionResult Privacy()
         {
