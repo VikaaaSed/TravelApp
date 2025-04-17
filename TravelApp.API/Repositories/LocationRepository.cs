@@ -36,6 +36,29 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
+        public async Task<IEnumerable<Location>> GetLocationByCityId(int cityId)
+        {
+            if (cityId <= 0)
+            {
+                _logger.LogWarning("Попытка получить список локаций с некорректным Id города: {id}", cityId);
+                return [];
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                IEnumerable<Location> city = await context.Locations.Where(l => l.IdCity == cityId).OrderBy(l => l.Id).ToListAsync() ?? [];
+
+                if (city.Count() == 0)
+                    _logger.LogInformation("Не удалось найти локации по указанному id города {cityId}", cityId);
+                return city;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении Локацию по id города: {id}", cityId);
+                return [];
+            }
+        }
+
     }
 
 }

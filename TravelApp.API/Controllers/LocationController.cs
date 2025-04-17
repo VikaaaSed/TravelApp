@@ -23,7 +23,7 @@ namespace TravelApp.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet("GetLocationsByCityId")]
+        [HttpGet("GetLocationsViewsByCityId")]
         public async Task<ActionResult<IEnumerable<LocationInCity>>> GetLocationsByCityIdAsync(int cityId)
            => Ok(await _repositoryLocationInCity.GetLocationInCityByCityIdAsync(cityId));
         [HttpGet("GetLocationByPageName")]
@@ -39,6 +39,17 @@ namespace TravelApp.API.Controllers
             if (id <= 0) return BadRequest();
             Location? location = await _repositoryLocation.GetAsync(id);
             if (location == null) return NotFound();
+            return Ok(location);
+        }
+        [HttpGet("GetLocationsByCityId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocationByCityIdAsync(int cityId)
+        {
+            if (cityId <= 0) return BadRequest();
+            IEnumerable<Location> location = await _repositoryLocation.GetLocationByCityId(cityId);
+            if (location.Count() == 0) return NotFound();
             return Ok(location);
         }
 

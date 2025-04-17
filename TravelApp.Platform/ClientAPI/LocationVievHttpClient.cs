@@ -24,7 +24,7 @@ namespace TravelApp.Platform.ClientAPI
                     return [];
                 }
 
-                string url = $"{BaseUrl}/Location/GetLocationsByCityId?cityId={cityId}";
+                string url = $"{BaseUrl}/Location/GetLocationsViewsByCityId?cityId={cityId}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
