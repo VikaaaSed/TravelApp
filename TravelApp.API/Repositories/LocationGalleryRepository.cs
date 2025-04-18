@@ -67,5 +67,32 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
+        public async Task<LocationGallery> CreateAsync(LocationGallery gallery)
+        {
+            if (gallery == null)
+            {
+                _logger.LogWarning("Попытка создания картинки в галереи локации с пустым объектом.");
+                throw new ArgumentNullException(nameof(gallery));
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                await context.Gallery.AddAsync(gallery);
+                await context.SaveChangesAsync();
+                _logger.LogInformation("Картинка в галереи локации успешно создан. ID: {id}", gallery.Id);
+
+                return gallery;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении картинки в галереи локации: {Gallery}", gallery);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при создании картинки в галереи локации.");
+                throw;
+            }
+        }
     }
 }

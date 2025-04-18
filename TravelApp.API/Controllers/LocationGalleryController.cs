@@ -32,5 +32,14 @@ namespace TravelApp.API.Controllers
             if (location == null) return NotFound();
             return Ok(location);
         }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<LocationGallery>> CreateAsync([FromBody] LocationGallery newGallery)
+        {
+            if (newGallery == null) return BadRequest();
+            LocationGallery gallery = await _repository.CreateAsync(newGallery);
+            return gallery;
+        }
     }
 }
