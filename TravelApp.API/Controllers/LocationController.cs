@@ -61,5 +61,14 @@ namespace TravelApp.API.Controllers
             Location location = await _repositoryLocation.CreateAsync(newLocation);
             return CreatedAtAction(nameof(CreateAsync), location);
         }
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateAsync([FromBody] Location location)
+        {
+            if (location == null) return BadRequest();
+            await _repositoryLocation.UpdateAsync(location);
+            return NoContent();
+        }
     }
 }

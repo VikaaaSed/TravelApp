@@ -7,5 +7,6 @@ namespace TravelApp.API.Repositories.Interfaces
         public Task<Location?> GetAsync(int id);
         public Task<IEnumerable<Location>> GetLocationByCityIdAsync(int cityId);
         public Task<Location> CreateAsync(Location location);
+        public Task UpdateAsync(Location location);
     }
 }

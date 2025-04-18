@@ -85,6 +85,51 @@ namespace TravelApp.API.Repositories
                 return [];
             }
         }
+        public async Task UpdateAsync(Location location)
+        {
+            if (location.Id <= 0)
+            {
+                _logger.LogWarning("Попытка обновить локацию. с некорректным Id: {id}", location.Id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            await using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+
+                var oldLocation = await context.Locations.SingleOrDefaultAsync(l => l.Id == location.Id);
+                if (oldLocation == null)
+                {
+                    _logger.LogWarning("Попытка обновить несуществующую локацию с id: {id}", location.Id);
+                    return;
+                }
+                oldLocation.IdCity = location.IdCity;
+                oldLocation.Title = location.Title;
+                oldLocation.Description = location.Description;
+                oldLocation.Address = location.Address;
+                oldLocation.WorkSchedule = location.WorkSchedule;
+                oldLocation.TicketLink = location.TicketLink;
+                oldLocation.PictureInCityLink = location.PictureInCityLink;
+                oldLocation.PicturePageLink = location.PicturePageLink;
+                oldLocation.PageName = location.PageName;
+                oldLocation.Rating = location.Rating;
+                oldLocation.PageVisible = location.PageVisible;
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении изменений локации с id: {id}", location.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при обновления данных о локации по id: {id}", location.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 
 }
