@@ -130,6 +130,36 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task DeleteAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка удаления локации с некорректным Id: {id}", id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var location = await context.Locations.SingleOrDefaultAsync(c => c.Id == id);
+                if (location == null)
+                {
+                    _logger.LogWarning("Попытка удаления несуществующей локации с id: {id}", id);
+                    return;
+                }
+                context.Locations.Remove(location);
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при удалении локации с id: {id}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при удалении локации по id: {id}", id);
+                throw;
+            }
+        }
     }
 
 }
