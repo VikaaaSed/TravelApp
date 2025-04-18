@@ -14,6 +14,33 @@ namespace TravelApp.API.Repositories
             _context = context;
             _logger = logger;
         }
+        public async Task<Location> CreateAsync(Location location)
+        {
+            if (location == null)
+            {
+                _logger.LogWarning("Попытка создания локации с пустым объектом.");
+                throw new ArgumentNullException(nameof(location));
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                await context.Locations.AddAsync(location);
+                await context.SaveChangesAsync();
+                _logger.LogInformation("Локация успешно создан. ID: {cityId}", location.Id);
+
+                return location;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении локации: {City}", location);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при создании локации.");
+                throw;
+            }
+        }
         public async Task<Location?> GetAsync(int id)
         {
             if (id <= 0)
@@ -36,7 +63,7 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
-        public async Task<IEnumerable<Location>> GetLocationByCityId(int cityId)
+        public async Task<IEnumerable<Location>> GetLocationByCityIdAsync(int cityId)
         {
             if (cityId <= 0)
             {
@@ -58,7 +85,6 @@ namespace TravelApp.API.Repositories
                 return [];
             }
         }
-
     }
 
 }
