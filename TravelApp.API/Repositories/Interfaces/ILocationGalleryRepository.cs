@@ -5,5 +5,6 @@ namespace TravelApp.API.Repositories.Interfaces
     public interface ILocationGalleryRepository
     {
         public Task<IEnumerable<LocationGallery>> GetGalleryByIdLocationAsync(int locationId);
+        public Task<LocationGallery?> GetAsync(int id);
     }
 }

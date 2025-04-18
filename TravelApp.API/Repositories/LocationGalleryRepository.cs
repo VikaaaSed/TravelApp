@@ -45,5 +45,27 @@ namespace TravelApp.API.Repositories
                 return Enumerable.Empty<LocationGallery>();
             }
         }
+        public async Task<LocationGallery?> GetAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка получить информацию о картинке из галереи локации с некорректным Id: {id}", id);
+                return null;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var gallery = await context.Gallery.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (gallery == null)
+                    _logger.LogInformation("Картинке из галереи локации с id '{id}' не найден.", id);
+                return gallery;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении картинки из галереи локации по id: {id}", id);
+                return null;
+            }
+        }
     }
 }

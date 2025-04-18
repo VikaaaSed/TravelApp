@@ -51,11 +51,11 @@ namespace TravelApp.API.Repositories
             await using var context = await _context.CreateDbContextAsync();
             try
             {
-                var city = await context.Locations.FirstOrDefaultAsync(c => c.Id == id);
+                var location = await context.Locations.FirstOrDefaultAsync(c => c.Id == id);
 
-                if (city == null)
+                if (location == null)
                     _logger.LogInformation("Локацию с id '{id}' не найден.", id);
-                return city;
+                return location;
             }
             catch (Exception ex)
             {

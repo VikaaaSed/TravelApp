@@ -21,5 +21,16 @@ namespace TravelApp.API.Controllers
         [HttpGet("GetGalleryByLocationId")]
         public async Task<ActionResult<LocationInHomePage>> GetGalleryByLocationIdAsync(int locationId)
             => Ok(await _repository.GetGalleryByIdLocationAsync(locationId));
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<LocationGallery>> GetAsync(int id)
+        {
+            if (id <= 0) return BadRequest();
+            LocationGallery? location = await _repository.GetAsync(id);
+            if (location == null) return NotFound();
+            return Ok(location);
+        }
     }
 }
