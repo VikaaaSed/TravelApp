@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.Models;
 using TravelApp.API.Repositories.Interfaces;
 
@@ -39,7 +38,7 @@ namespace TravelApp.API.Controllers
         {
             if (newGallery == null) return BadRequest();
             LocationGallery gallery = await _repository.CreateAsync(newGallery);
-            return gallery;
+            return Created($"/api/LocationGallery/{gallery.Id}", gallery);
         }
     }
 }

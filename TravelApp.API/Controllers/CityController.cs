@@ -37,7 +37,7 @@ namespace TravelApp.API.Controllers
         {
             if (city == null) return BadRequest();
             City createdCity = await _repository.CreateCityAsync(city);
-            return CreatedAtAction(nameof(Create), createdCity); ;
+            return CreatedAtAction(nameof(Create), createdCity);
         }
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

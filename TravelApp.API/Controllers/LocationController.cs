@@ -59,7 +59,7 @@ namespace TravelApp.API.Controllers
         {
             if (newLocation == null) return BadRequest();
             Location location = await _repositoryLocation.CreateAsync(newLocation);
-            return CreatedAtAction(nameof(CreateAsync), location);
+            return Created($"/api/Location/{location.Id}", location);
         }
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
