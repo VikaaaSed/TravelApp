@@ -94,5 +94,43 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task UpdateAsync(LocationGallery gallery)
+        {
+            if (gallery.Id <= 0)
+            {
+                _logger.LogWarning("Попытка обновить картинку с некорректным Id: {id}", gallery.Id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            await using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+
+                var oldGallery = await context.Gallery.SingleOrDefaultAsync(l => l.Id == gallery.Id);
+                if (oldGallery == null)
+                {
+                    _logger.LogWarning("Попытка обновить несуществующую картинку с id: {id}", gallery.Id);
+                    return;
+                }
+                oldGallery.LocationId = gallery.LocationId;
+                oldGallery.Title = gallery.Title;
+                oldGallery.PictureLink = gallery.PictureLink;
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении изменений картинки в галерею локации с id: {id}", gallery.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при обновления данных о картинке в галереи локации по id: {id}", gallery.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }
