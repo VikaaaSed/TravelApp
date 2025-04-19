@@ -8,5 +8,6 @@ namespace TravelApp.API.Repositories.Interfaces
         public Task<LocationGallery?> GetAsync(int id);
         public Task<LocationGallery> CreateAsync(LocationGallery gallery);
         public Task UpdateAsync(LocationGallery gallery);
+        public Task DeleteAsync(int id);
     }
 }

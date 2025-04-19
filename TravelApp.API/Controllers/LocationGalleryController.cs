@@ -49,5 +49,16 @@ namespace TravelApp.API.Controllers
             await _repository.UpdateAsync(gallery);
             return NoContent();
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            if (id <= 0) return BadRequest();
+            if (await _repository.GetAsync(id) == null) return NotFound();
+            await _repository.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

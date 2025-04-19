@@ -132,5 +132,35 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task DeleteAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка удаления картинку и галереи локации с некорректным Id: {id}", id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var gallery = await context.Gallery.SingleOrDefaultAsync(c => c.Id == id);
+                if (gallery == null)
+                {
+                    _logger.LogWarning("Попытка удаления несуществующей картинки с id: {id}", id);
+                    return;
+                }
+                context.Gallery.Remove(gallery);
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при удалении картинки с id: {id}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при удалении картинки по id: {id}", id);
+                throw;
+            }
+        }
     }
 }
