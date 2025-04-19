@@ -66,6 +66,7 @@ builder.Services.AddHttpClient<LocationGalleryHttpClient>();
 builder.Services.AddHttpClient<FeedbackViewHttpClient>();
 builder.Services.AddHttpClient<FeedbackHttpClient>();
 builder.Services.AddHttpClient<UserHttpClient>();
+builder.Services.AddHttpClient<LocationHttpClient>();
 
 // Регистрация сервисов
 builder.Services.AddScoped<IHomeService, HomeService>();

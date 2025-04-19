@@ -41,7 +41,7 @@ namespace TravelApp.API.Controllers
             if (location == null) return NotFound();
             return Ok(location);
         }
-        [HttpGet("GetLocationsByCityId")]
+        [HttpGet("GetLocationsByCityId/{cityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
