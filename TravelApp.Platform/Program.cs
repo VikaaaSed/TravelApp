@@ -77,6 +77,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAdminCityService, AdminCityService>();
+builder.Services.AddScoped<IAdminLocationService, AdminLocationService>();
 
 var app = builder.Build();
 

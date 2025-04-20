@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TravelApp.API.Models.Location>
+
+<h2>Места</h2>
+
+<a href="#" class="btn btn-success mb-3">Добавить место</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>id Города</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Изображение (Основное)</th>
+            <th>Изображение (Дополнительное)</th>
+            <th>Название страницы</th>
+            <th>Отображать</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var location in Model)
+        {
+            <tr>
+                <td>@location.Id</td>
+                <td>@location.IdCity</td>
+                <td>@location.Title</td>
+                @{
+                    string plainText = System.Text.RegularExpressions.Regex.Replace(location.Description ?? "", "<.*?>", string.Empty);
+                    string shortText = plainText.Length > 20 ? plainText.Substring(0, 17) + " ..." : plainText;
+                }
+                <td>@shortText</td>
+                <td>@location.PicturePageLink</td>
+                <td>@location.PictureInCityLink</td>
+                <td>@location.PageName</td>
+                <td>@(location.PageVisible ? "Да" : "Нет")</td>
+                <td>
+                    <a href="#" class="btn btn-primary btn-sm">Редактировать</a>
+                    <form href="#" method="post" style="display:inline;" onsubmit="return confirm('Удалить город?');">
+                        <input type="hidden" name="id" value="@location.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <caption>>:^) Всего: @Model.Count()</caption>
+</table>

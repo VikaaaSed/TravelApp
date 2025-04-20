@@ -7,7 +7,7 @@ namespace TravelApp.Platform.ClientAPI
         private readonly HttpClient _httpClient;
 
         private readonly ILogger<LocationGalleryHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7119/api";
+        private readonly string BaseUrl = "https://localhost:7040/api";
         public LocationGalleryHttpClient(HttpClient httpClient,
             ILogger<LocationGalleryHttpClient> logger)
         {

@@ -6,7 +6,7 @@ namespace TravelApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<LocationHttpClient> _logger;
-        private const string BaseUrl = "https://localhost:7119/api";
+        private const string BaseUrl = "https://localhost:7040/api";
         public LocationHttpClient(HttpClient httpClient, ILogger<LocationHttpClient> logger)
         {
             _httpClient = httpClient;
