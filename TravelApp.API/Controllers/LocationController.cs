@@ -81,5 +81,14 @@ namespace TravelApp.API.Controllers
             await _repositoryLocation.DeleteAsync(id);
             return NoContent();
         }
+        [HttpGet("GetAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Location>>> GetAllAsync()
+        {
+            var locations = await _repositoryLocation.GetAllAsync();
+            if (locations == null) return NotFound();
+            return Ok(locations);
+        }
     }
 }

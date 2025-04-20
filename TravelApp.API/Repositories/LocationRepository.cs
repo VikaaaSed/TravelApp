@@ -160,6 +160,20 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task<IEnumerable<Location>> GetAllAsync()
+        {
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                return await context.Locations.OrderBy(n => n.Id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении списка всех локаций");
+                return Enumerable.Empty<Location>();
+            }
+        }
     }
 
 }
