@@ -120,5 +120,29 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<IEnumerable<API.Models.Location>> GetAllAsync()
+        {
+            try
+            {
+                string url = $"{BaseUrl}/Location/GetAll";
+
+                var response = await _httpClient.GetAsync(url);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при получении локаций: {response.StatusCode}");
+                }
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>() ?? throw new JsonException("Ошибка десериализации ответа");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetAllAsync");
+                throw;
+            }
+        }
     }
 }
