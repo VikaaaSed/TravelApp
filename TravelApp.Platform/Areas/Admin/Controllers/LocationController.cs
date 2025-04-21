@@ -25,5 +25,13 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             if (locations.Count < 1) _logger.LogWarning("Получено 0 локаций городов");
             return View(locations);
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var information = await _locationService.GetAllLocationInfoAsync(id);
+            if (information == null) return NotFound();
+
+            return View("CreateOrEdit", information);
+        }
     }
 }

@@ -1,14 +1,14 @@
-﻿@model TravelApp.Platform.Models.AllCityInformation
+﻿@model TravelApp.Platform.Areas.Admin.Models.AllLocationInfo
 @{
-    var isNew = Model.City.Id == 0;
-    ViewData["Title"] = isNew ? "Добавить город" : "Редактировать город";
+    var isNew = Model.Location.Id == 0;
+    string title = isNew ? "Добавить место" : "Редактировать место";
+    ViewData["Title"] = title;
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4">@(isNew ? "Добавить город" : "Редактировать город")</h2>
-
+    <h2 class="mb-4">@title</h2>
     <form asp-action="CreateOrEdit" method="post" class="needs-validation" novalidate>
-        <input type="hidden" asp-for="@Model.City.Id" />
+        <input type="hidden" asp-for="@Model.Location.Id" />
         <div class="card mb-4">
             <div class="card-header bg-light">
                 <h5 class="mb-0">Основная информация</h5>
@@ -16,31 +16,51 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label asp-for="@Model.City.Title" class="form-label">Название города</label>
-                        <input asp-for="@Model.City.Title" class="form-control" />
-                        <span asp-validation-for="@Model.City.Title" class="text-danger"></span>
+                        <label asp-for="@Model.Location.Title" class="form-label">Название места</label>
+                        <input asp-for="@Model.Location.Title" class="form-control" />
+                        <span asp-validation-for="@Model.Location.Title" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label asp-for="@Model.City.PageName" class="form-label">Название страницы</label>
-                        <input asp-for="@Model.City.PageName" class="form-control" />
-                        <span asp-validation-for="@Model.City.PageName" class="text-danger"></span>
+                        <label asp-for="@Model.Location.PageName" class="form-label">Название страницы</label>
+                        <input asp-for="@Model.Location.PageName" class="form-control" />
+                        <span asp-validation-for="@Model.Location.PageName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="@Model.Location.Address" class="form-label">Адрес</label>
+                        <input asp-for="@Model.Location.Address" class="form-control" />
+                        <span asp-validation-for="@Model.Location.Address" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="@Model.Location.TicketLink" class="form-label">Ссылка на покупку билета</label>
+                        <input asp-for="@Model.Location.TicketLink" class="form-control" />
+                        <span asp-validation-for="@Model.Location.TicketLink" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.City.Description" class="form-label">Описание</label>
-                    <textarea asp-for="@Model.City.Description" class="form-control" id="description" rows="5"></textarea>
-                    <span asp-validation-for="@Model.City.Description" class="text-danger"></span>
+                    <label asp-for="@Model.Location.Description" class="form-label">Описание</label>
+                    <textarea asp-for="@Model.Location.Description" class="form-control" id="description" rows="5"></textarea>
+                    <span asp-validation-for="@Model.Location.Description" class="text-danger"></span>
                 </div>
 
+                <div class="mb-3">
+                    <label asp-for="@Model.Location.WorkSchedule" class="form-label">Расписание работы</label>
+                    <textarea asp-for="@Model.Location.WorkSchedule" class="form-control" id="workschedule" rows="5"></textarea>
+                    <span asp-validation-for="@Model.Location.WorkSchedule" class="text-danger"></span>
+                </div>
+
+                
+
                 <div class="form-check form-switch mb-3">
-                    <input  class="form-check-input" type="checkbox" asp-for="@Model.City.PageVisible" id="pageVisibleSwitch">
+                    <input class="form-check-input" type="checkbox" asp-for="@Model.Location.PageVisible" id="pageVisibleSwitch">
                     <label class="form-check-label" for="pageVisibleSwitch">Отображать страницу</label>
                 </div>
-                @if (Model.City.Id != 0 && !string.IsNullOrWhiteSpace(Model.City.PageName))
+                @if (Model.Location.Id != 0 && !string.IsNullOrWhiteSpace(Model.Location.PageName))
                 {
                     <div class="mb-3">
-                        <a asp-area="" asp-controller="City" asp-action="Index" asp-route-pagename="@Model.City.PageName" target="_blank">
+                        <a asp-area="" asp-controller="Location" asp-action="Index" asp-route-pagename="@Model.Location.PageName" target="_blank">
                             Предпросмотр страницы
                         </a>
                     </div>
@@ -56,18 +76,18 @@
 
                 <div class="row align-items-center mb-4">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label asp-for="@Model.City.MainPictureLink" class="form-label">URL главного изображения</label>
-                        <input asp-for="@Model.City.MainPictureLink" class="form-control" id="mainPictureLinkInput" />
-                        <span asp-validation-for="@Model.City.MainPictureLink" class="text-danger"></span>
+                        <label asp-for="@Model.Location.PicturePageLink" class="form-label">URL главного изображения</label>
+                        <input asp-for="@Model.Location.PicturePageLink" class="form-control" id="mainPictureLinkInput" />
+                        <span asp-validation-for="@Model.Location.PicturePageLink" class="text-danger"></span>
                         <div class="form-text">Рекомендуемый размер: 1200×800px</div>
                     </div>
                     <div class="col-md-6">
                         <div class="image-preview-container">
                             <img id="mainPictureImagePreview"
-                                 src="@(!string.IsNullOrEmpty(Model.City.MainPictureLink) ? Model.City.MainPictureLink : "#")"
+                                 src="@(!string.IsNullOrEmpty(Model.Location.PicturePageLink) ? Model.Location.PicturePageLink : "#")"
                                  alt="Превью главного изображения"
                                  class="img-thumbnail img-fluid"
-                                 style="@(!string.IsNullOrEmpty(Model.City.MainPictureLink) ? "" : "display: none;")" />
+                                 style="@(!string.IsNullOrEmpty(Model.Location.PicturePageLink) ? "" : "display: none;")" />
                             <div class="loading-spinner" style="display: none;">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Загрузка...</span>
@@ -78,18 +98,18 @@
                 </div>
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label asp-for="@Model.City.PictureAtHomeLink" class="form-label">URL домашнего изображения</label>
-                        <input asp-for="@Model.City.PictureAtHomeLink" class="form-control" id="pictureAtHomeLinkInput" />
-                        <span asp-validation-for="@Model.City.PictureAtHomeLink" class="text-danger"></span>
+                        <label asp-for="@Model.Location.PictureInCityLink" class="form-label">URL изображения в списке локаций</label>
+                        <input asp-for="@Model.Location.PictureInCityLink" class="form-control" id="pictureAtHomeLinkInput" />
+                        <span asp-validation-for="@Model.Location.PictureInCityLink" class="text-danger"></span>
                         <div class="form-text">Рекомендуемый размер: 800×600px</div>
                     </div>
                     <div class="col-md-6">
                         <div class="image-preview-container">
                             <img id="pictureAtHomeLinkImagePreview"
-                                 src="@(!string.IsNullOrEmpty(Model.City?.PictureAtHomeLink) ? Model.City.PictureAtHomeLink : "#")"
+                                 src="@(!string.IsNullOrEmpty(Model.Location.PictureInCityLink) ? Model.Location.PictureInCityLink : "#")"
                                  alt="Превью домашнего изображения"
                                  class="img-thumbnail img-fluid"
-                                 style="@(!string.IsNullOrEmpty(Model.City?.PictureAtHomeLink) ? "" : "display: none;")" />
+                                 style="@(!string.IsNullOrEmpty(Model.Location.PictureInCityLink) ? "" : "display: none;")" />
                             <div class="loading-spinner" style="display: none;">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Загрузка...</span>
@@ -97,44 +117,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="card mb-4">
-            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Локации</h5>
-            </div>
-            <a href="#" class="btn btn-success mb-3">Добавить локацию</a>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Название</th>
-                                <th>Название страницы</th>
-                                <th>Ссылка на картинку</th>
-                            </tr>
-                        </thead>
-
-
-                        <tbody>
-                            @foreach (var location in Model.Locations)
-                            {
-                                <tr>
-                                    <td>@location.Id</td>
-                                    <td>@location.Title</td>
-                                    <td>@location.PageName</td>
-                                    <td>@location.PictureLink</td>
-                                    <td>
-                                        <a asp-area="Admin" asp-controller="Location" asp-action="Edit" asp-route-id="@location.Id" class="btn btn-primary btn-sm">Редактировать</a>
-                                        <a href="#" class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Удалить город?');">Удалить</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -151,7 +133,6 @@
 
 @section Styles {
     <style>
-        
         .table th {
             white-space: nowrap;
         }
@@ -163,6 +144,8 @@
         .table .btn-group {
             white-space: nowrap;
         }
+
+
         .image-preview-container {
             position: relative;
             border: 1px dashed #ddd;
@@ -188,7 +171,6 @@
         }
     </style>
 }
-
 @section Scripts {
     <script>
         function setupImagePreview(inputId, previewId) {
@@ -230,29 +212,33 @@
             input.addEventListener('input', () => updatePreview(input.value));
         }
 
-
         document.addEventListener('DOMContentLoaded', function () {
             setupImagePreview('mainPictureLinkInput', 'mainPictureImagePreview');
             setupImagePreview('pictureAtHomeLinkInput', 'pictureAtHomeLinkImagePreview');
         });
     </script>
-
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            ClassicEditor
-                .create(document.querySelector('#description'), {
-                    toolbar: [
-                        'heading', '|',
-                        'bold', 'italic', 'underline', 'strikethrough', 'removeFormat', '|',
-                        'link', 'bulletedList', 'numberedList', '|',
-                        'undo', 'redo', 'alignment'
-                    ]
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            const editorConfig = {
+                toolbar: [
+                    'heading', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', 'removeFormat', '|',
+                    'link', 'bulletedList', 'numberedList', '|',
+                    'undo', 'redo', 'alignment'
+                ]
+            };
+            const editorIds = ['#description', '#workschedule'];
+            editorIds.forEach(id => {
+                const element = document.querySelector(id);
+                if (element) {
+                    ClassicEditor
+                        .create(element, editorConfig)
+                        .catch(error => {
+                            console.error(`Ошибка инициализации редактора для ${id}:`, error);
+                        });
+                }
+            });
         });
     </script>
-
 }
