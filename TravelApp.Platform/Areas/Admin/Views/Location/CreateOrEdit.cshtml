@@ -215,6 +215,8 @@
 }
 @section Scripts {
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script>window.CKEditorFields = ['description', 'workschedule'];</script>
+    <script src="~/js/ckeditor-init.js"></script>
     <script>
         function setupImagePreview(inputId, previewId) {
             const input = document.getElementById(inputId);
@@ -261,27 +263,6 @@
             setupImagePreview('pictureAtHomeLinkInput', 'pictureAtHomeLinkImagePreview');
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const editorConfig = {
-                toolbar: [
-                    'heading', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', 'removeFormat', '|',
-                    'link', 'bulletedList', 'numberedList', '|',
-                    'undo', 'redo', 'alignment'
-                ]
-            };
-            const editorIds = ['#description', '#workschedule'];
-            editorIds.forEach(id => {
-                const element = document.querySelector(id);
-                if (element) {
-                    ClassicEditor
-                        .create(element, editorConfig)
-                        .catch(error => {
-                            console.error(`Ошибка инициализации редактора для ${id}:`, error);
-                        });
-                }
-            });
-        });
         document.addEventListener('DOMContentLoaded', function () {
             let galleryIndex = @Model.Gallery.Count;
 

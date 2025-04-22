@@ -236,23 +236,7 @@
             setupImagePreview('pictureAtHomeLinkInput', 'pictureAtHomeLinkImagePreview');
         });
     </script>
-
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            ClassicEditor
-                .create(document.querySelector('#description'), {
-                    toolbar: [
-                        'heading', '|',
-                        'bold', 'italic', 'underline', 'strikethrough', 'removeFormat', '|',
-                        'link', 'bulletedList', 'numberedList', '|',
-                        'undo', 'redo', 'alignment'
-                    ]
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-    </script>
-
+    <script>window.CKEditorFields = ['description'];</script>
+    <script src="~/js/ckeditor-init.js"></script>
 }
