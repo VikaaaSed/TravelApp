@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.API.Models;
+using TravelApp.Platform.Areas.Admin.Models;
 using TravelApp.Platform.Areas.Admin.Services.Interfaces;
 
 namespace TravelApp.Platform.Areas.Admin.Controllers
@@ -21,7 +21,7 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<Location> locations = await _locationService.GetAllLocationsAsync();
+            List<API.Models.Location> locations = await _locationService.GetAllLocationsAsync();
             if (locations.Count < 1) _logger.LogWarning("Получено 0 локаций городов");
             return View(locations);
         }
@@ -32,6 +32,12 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             if (information == null) return NotFound();
 
             return View("CreateOrEdit", information);
+        }
+        [HttpPost]
+        public IActionResult CreateOrEdit(AllLocationInfo model)
+        {
+
+            return RedirectToAction("Index");
         }
     }
 }
