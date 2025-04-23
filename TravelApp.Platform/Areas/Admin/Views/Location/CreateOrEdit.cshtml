@@ -139,14 +139,16 @@
                             <tr>
                                 <td>
                                     <input type="hidden" name="Gallery[@i].Id" asp-for="@Model.Gallery[i].Id" />
-                                    
                                     <input type="hidden" name="Gallery[@i].LocationId" asp-for="@Model.Location.Id" />
                                     <input type="text" name="Gallery[@i].Title" value="@Model.Gallery[i].Title" class="form-control" />
                                 </td>
                                 <td>
                                     <input type="text" name="Gallery[@i].PictureLink" value="@Model.Gallery[i].PictureLink" class="form-control"
-                                           oninput="this.nextElementSibling.src = this.value" />
-                                    <img alt="@Model.Gallery[i].Title" title="@Model.Gallery[i].Title" src="@Model.Gallery[i].PictureLink" class="img-thumbnail mt-2" style="max-height: 100px;" />
+                                           id="galleryLink_@i" data-preview-id="galleryImg_@i" />
+                                </td>
+                                <td>
+                                    <img id="galleryImg_@i" src="@Model.Gallery[i].PictureLink" alt="@Model.Gallery[i].Title" title="@Model.Gallery[i].Title"
+                                         class="img-thumbnail mt-2" style="max-height: 100px; @(!string.IsNullOrEmpty(Model.Gallery[i].PictureLink) ? "" : "display: none;")" />
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-sm delete-row">Удалить</button>
@@ -214,55 +216,32 @@
     </style>
 }
 @section Scripts {
+    <script src="~/js/imagePreview.js"></script>
+    <script src="~/js/ckeditor-init.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>window.CKEditorFields = ['description', 'workschedule'];</script>
-    <script src="~/js/ckeditor-init.js"></script>
     <script>
-        function setupImagePreview(inputId, previewId) {
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
-            const spinner = preview.closest('.image-preview-container').querySelector('.loading-spinner');
-
-            if (!input || !preview) return;
-
-            const updatePreview = (url) => {
-                url = (url || '').trim();
-
-                if (url) {
-                    preview.style.display = 'none';
-                    spinner.style.display = 'block';
-
-
-                    const tempImg = new Image();
-                    tempImg.onload = () => {
-                        preview.src = url;
-                        preview.style.display = 'block';
-                        spinner.style.display = 'none';
-                    };
-                    tempImg.onerror = () => {
-                        preview.style.display = 'none';
-                        spinner.style.display = 'none';
-                        preview.closest('.image-preview-container').classList.add('bg-danger', 'bg-opacity-10');
-                        setTimeout(() => {
-                            preview.closest('.image-preview-container').classList.remove('bg-danger', 'bg-opacity-10');
-                        }, 2000);
-                    };
-                    tempImg.src = url;
-                } else {
-                    preview.style.display = 'none';
-                    spinner.style.display = 'none';
-                }
-            };
-
-            updatePreview(input.value);
-            input.addEventListener('input', () => updatePreview(input.value));
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             setupImagePreview('mainPictureLinkInput', 'mainPictureImagePreview');
             setupImagePreview('pictureAtHomeLinkInput', 'pictureAtHomeLinkImagePreview');
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('input[name*="PictureLink"]').forEach(input => {
+                const imgId = input.getAttribute('data-preview-id');
+                input.addEventListener('input', function () {
+                    const img = document.getElementById(imgId);
+                    img.src = input.value;
 
+                    if (img.src) {
+                        img.style.display = 'block';
+                    } else {
+                        img.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             let galleryIndex = @Model.Gallery.Count;
 
@@ -274,19 +253,38 @@
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                                    <td>
-                                        <input type="hidden" name="Gallery[${galleryIndex}].Id" value="0" />
-                                        <input type="hidden" name="Gallery[${galleryIndex}].LocationId" asp-for="@Model.Location.Id" />
-                                        <input type="text" name="Gallery[${galleryIndex}].Title" class="form-control" />
-                                    </td>
-                                    <td>
-                                        <input type="text" name="Gallery[${galleryIndex}].PictureLink" class="form-control"
-                                               oninput="this.nextElementSibling.src = this.value" />
-                                        <img src="" class="img-thumbnail mt-2" style="max-height: 100px;" />
-                                    </td>
-                                    <td><button type="button" class="btn btn-danger btn-sm delete-row">Удалить</button></td>
-                                `;
+                                <td>
+                                    <input type="hidden" name="Gallery[${galleryIndex}].Id" value="0" />
+                                    <input type="hidden" name="Gallery[${galleryIndex}].LocationId" asp-for="@Model.Location.Id" />
+                                    <input type="text" name="Gallery[${galleryIndex}].Title" class="form-control" />
+                                </td>
+                                <td>
+                                    <!-- Столбец для поля ввода -->
+                                    <input type="text" name="Gallery[${galleryIndex}].PictureLink" class="form-control" id="galleryLink_${galleryIndex}" data-preview-id="galleryImg_${galleryIndex}" />
+                                </td>
+                                <td>
+                                    <!-- Столбец для изображения -->
+                                    <img id="galleryImg_${galleryIndex}" src="" alt="Превью изображения" class="img-thumbnail mt-2" style="max-height: 100px; display: none;" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm delete-row">Удалить</button>
+                                </td>
+                            `;
                 tableBody.appendChild(row);
+
+                const input = document.getElementById(`galleryLink_${galleryIndex}`);
+                const img = document.getElementById(`galleryImg_${galleryIndex}`);
+
+                input.addEventListener('input', function () {
+                    img.src = input.value;
+
+                    if (img.src) {
+                        img.style.display = 'block';
+                    } else {
+                        img.style.display = 'none';
+                    }
+                });
+
                 galleryIndex++;
             });
 
