@@ -8,5 +8,6 @@ namespace TravelApp.Platform.Areas.Admin.Services.Interfaces
         public Task<API.Models.Location?> GetLocationAsync(int Id);
         public Task<AllLocationInfo> GetAllLocationInfoAsync(int Id);
         public Task<List<API.Models.LocationGallery>> GetLocationGalleryAsync(int Id);
+        public Task UpdateLocation(Location location);
     }
 }

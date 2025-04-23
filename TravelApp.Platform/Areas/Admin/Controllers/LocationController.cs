@@ -34,9 +34,10 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             return View("CreateOrEdit", information);
         }
         [HttpPost]
-        public IActionResult CreateOrEdit(AllLocationInfo model)
+        public async Task<IActionResult> CreateOrEdit(AllLocationInfo model)
         {
-
+            if (model?.Location?.Id != 0)
+                await _locationService.UpdateLocation(model?.Location);
             return RedirectToAction("Index");
         }
     }

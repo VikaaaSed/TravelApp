@@ -9,6 +9,7 @@
     <h2 class="mb-4">@title</h2>
     <form asp-area="Admin" asp-controller="Location" asp-action="CreateOrEdit" method="post" class="needs-validation" novalidate>
         <input type="hidden" asp-for="@Model.Location.Id" />
+        <input type="hidden" asp-for="@Model.Location.IdCity" />
         <div class="card mb-4">
             <div class="card-header bg-light">
                 <h5 class="mb-0">Основная информация</h5>
