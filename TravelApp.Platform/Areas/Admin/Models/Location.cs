@@ -23,15 +23,15 @@ namespace TravelApp.Platform.Areas.Admin.Models
             {
                 Id = location.Id,
                 IdCity = location.IdCity,
-                Title = location.Title,
-                Description = location.Description,
-                Address = location.Address,
-                WorkSchedule = location.WorkSchedule,
-                TicketLink = location.TicketLink,
-                PictureInCityLink = location.PictureInCityLink,
-                PicturePageLink = location.PicturePageLink,
+                Title = location.Title ?? "",
+                Description = location.Description ?? "",
+                Address = location.Address ?? "",
+                WorkSchedule = location.WorkSchedule ?? "",
+                TicketLink = location.TicketLink ?? "",
+                PictureInCityLink = location.PictureInCityLink ?? "",
+                PicturePageLink = location.PicturePageLink ?? "",
                 PageVisible = location.PageVisible,
-                PageName = location.PageName,
+                PageName = location.PageName ?? "",
             };
         }
         public static Location ConvertToUILocation(API.Models.Location location)
