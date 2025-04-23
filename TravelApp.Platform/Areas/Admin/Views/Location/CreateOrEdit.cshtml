@@ -221,77 +221,96 @@
     <script src="~/js/ckeditor-init.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>window.CKEditorFields = ['description', 'workschedule'];</script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             setupImagePreview('mainPictureLinkInput', 'mainPictureImagePreview');
             setupImagePreview('pictureAtHomeLinkInput', 'pictureAtHomeLinkImagePreview');
         });
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('input[name*="PictureLink"]').forEach(input => {
                 const imgId = input.getAttribute('data-preview-id');
                 input.addEventListener('input', function () {
                     const img = document.getElementById(imgId);
                     img.src = input.value;
-
-                    if (img.src) {
-                        img.style.display = 'block';
-                    } else {
-                        img.style.display = 'none';
-                    }
+                    img.style.display = img.src ? 'block' : 'none';
                 });
             });
         });
     </script>
+
     <script>
+        function reindexGalleryRows() {
+            const rows = document.querySelectorAll('#galleryTableBody tr');
+            rows.forEach((row, index) => {
+                row.querySelectorAll('input, img').forEach(el => {
+                    if (el.name?.includes('Gallery')) {
+                        el.name = el.name.replace(/Gallery\[\d+\]/, `Gallery[${index}]`);
+                    }
+
+                    if (el.id?.includes('galleryLink_')) {
+                        el.id = `galleryLink_${index}`;
+                        el.setAttribute('data-preview-id', `galleryImg_${index}`);
+                    }
+
+                    if (el.id?.includes('galleryImg_')) {
+                        el.id = `galleryImg_${index}`;
+                    }
+
+                    if (el.getAttribute('data-preview-id')) {
+                        el.setAttribute('data-preview-id', `galleryImg_${index}`);
+                    }
+                });
+
+                const input = row.querySelector(`input[id^="galleryLink_"]`);
+                const img = row.querySelector(`img[id^="galleryImg_"]`);
+                if (input && img) {
+                    input.addEventListener('input', function () {
+                        img.src = input.value;
+                        img.style.display = input.value ? 'block' : 'none';
+                    });
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             let galleryIndex = @Model.Gallery.Count;
-
+            let locationId = @Model.Location.Id;
             const addBtn = document.getElementById('addGalleryRowBtn');
             const tableBody = document.getElementById('galleryTableBody');
 
             addBtn.addEventListener('click', function (e) {
                 e.preventDefault();
 
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                                <td>
-                                    <input type="hidden" name="Gallery[${galleryIndex}].Id" value="0" />
-                                    <input type="hidden" name="Gallery[${galleryIndex}].LocationId" asp-for="@Model.Location.Id" />
-                                    <input type="text" name="Gallery[${galleryIndex}].Title" class="form-control" />
-                                </td>
-                                <td>
-                                    <!-- Столбец для поля ввода -->
-                                    <input type="text" name="Gallery[${galleryIndex}].PictureLink" class="form-control" id="galleryLink_${galleryIndex}" data-preview-id="galleryImg_${galleryIndex}" />
-                                </td>
-                                <td>
-                                    <!-- Столбец для изображения -->
-                                    <img id="galleryImg_${galleryIndex}" src="" alt="Превью изображения" class="img-thumbnail mt-2" style="max-height: 100px; display: none;" />
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm delete-row">Удалить</button>
-                                </td>
-                            `;
+                                    <td>
+                                        <input type="hidden" name="Gallery[${galleryIndex}].Id" value="0" />
+                                        <input type="hidden" name="Gallery[${galleryIndex}].LocationId" value="${locationId}" />
+                                        <input type="text" name="Gallery[${galleryIndex}].Title" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="Gallery[${galleryIndex}].PictureLink" class="form-control" id="galleryLink_${galleryIndex}" data-preview-id="galleryImg_${galleryIndex}" />
+                                    </td>
+                                    <td>
+                                        <img id="galleryImg_${galleryIndex}" src="" alt="Превью изображения" class="img-thumbnail mt-2" style="max-height: 100px; display: none;" />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm delete-row">Удалить</button>
+                                    </td>
+                                `;
                 tableBody.appendChild(row);
-
-                const input = document.getElementById(`galleryLink_${galleryIndex}`);
-                const img = document.getElementById(`galleryImg_${galleryIndex}`);
-
-                input.addEventListener('input', function () {
-                    img.src = input.value;
-
-                    if (img.src) {
-                        img.style.display = 'block';
-                    } else {
-                        img.style.display = 'none';
-                    }
-                });
-
                 galleryIndex++;
+
+                reindexGalleryRows();
             });
 
             tableBody.addEventListener('click', function (e) {
                 if (e.target.classList.contains('delete-row')) {
                     e.target.closest('tr').remove();
+                    reindexGalleryRows();
                 }
             });
         });
