@@ -7,11 +7,11 @@
     <div class="mx-5">
         <h2 class="kiwi-maru-regular text-center my-5">Немного из истории</h2>
         <p>
-            @Model.Location.Description
+            @Html.Raw(Model.Location.Description)
         </p>
         <h2 class="kiwi-maru-regular text-center my-5">Время работы</h2>
         <p>
-            @Model.Location.WorkSchedule<br>
+            @Html.Raw(Model.Location.WorkSchedule)<br>
         </p>
         <p><b>Адрес: @Model.Location.Address</b></p>
         <div class="btn-container">
