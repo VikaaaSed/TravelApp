@@ -111,8 +111,7 @@ namespace TravelApp.API.Repositories
                 oldLocation.TicketLink = location.TicketLink;
                 oldLocation.PictureInCityLink = location.PictureInCityLink;
                 oldLocation.PicturePageLink = location.PicturePageLink;
-                oldLocation.PageName = location.PageName;
-                oldLocation.Rating = location.Rating;
+                oldLocation.PageName = location.PageName;                
                 oldLocation.PageVisible = location.PageVisible;
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
