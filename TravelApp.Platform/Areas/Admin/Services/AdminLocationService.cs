@@ -94,5 +94,11 @@ namespace TravelApp.Platform.Areas.Admin.Services
             => await _locationGalleryHttpClient.CreateAsync(gallery);
         private bool AreEqual(API.Models.LocationGallery a, API.Models.LocationGallery b)
             => a.Id == b.Id && a.LocationId == b.LocationId && a.Title == b.Title && a.PictureLink == b.PictureLink;
+
+        public async Task<API.Models.Location> CreateLocation(Location location)
+        {
+            API.Models.Location dbLocation = Location.ConvertToDBLocation(location);
+            return await _locationHttpClient.CreateAsync(dbLocation);
+        }
     }
 }

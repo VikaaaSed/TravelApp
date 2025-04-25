@@ -10,5 +10,6 @@ namespace TravelApp.Platform.Areas.Admin.Services.Interfaces
         public Task<List<API.Models.LocationGallery>> GetLocationGalleryAsync(int Id);
         public Task UpdateLocation(Location location);
         public Task EditGallery(List<API.Models.LocationGallery> galleries, int idLocation);
+        public Task<API.Models.Location> CreateLocation(Location location);
     }
 }

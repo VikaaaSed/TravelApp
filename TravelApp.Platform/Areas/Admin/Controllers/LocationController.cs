@@ -38,8 +38,22 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
         {
             if (model?.Location?.Id != 0)
                 await _locationService.UpdateLocation(model?.Location);
+            else
+            {
+                var location = await _locationService.CreateLocation(model.Location);
+                foreach (var item in model.Gallery)
+                    item.LocationId = location.Id;
+            }
             await _locationService.EditGallery(model.Gallery, model.Location.Id);
             return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public IActionResult Create(int idCity)
+        {
+            Location newlocation = new Location();
+            newlocation.IdCity = idCity;
+            AllLocationInfo model = new(newlocation, []);
+            return View("CreateOrEdit", model);
         }
     }
 }
