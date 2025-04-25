@@ -100,5 +100,8 @@ namespace TravelApp.Platform.Areas.Admin.Services
             API.Models.Location dbLocation = Location.ConvertToDBLocation(location);
             return await _locationHttpClient.CreateAsync(dbLocation);
         }
+
+        public async Task DeleteLocation(int id)
+            => await _locationHttpClient.DeleteAsync(id);
     }
 }

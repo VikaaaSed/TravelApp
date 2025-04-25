@@ -55,5 +55,12 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             AllLocationInfo model = new(newlocation, []);
             return View("CreateOrEdit", model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _locationService.DeleteLocation(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

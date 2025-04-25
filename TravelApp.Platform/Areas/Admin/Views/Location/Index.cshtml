@@ -35,7 +35,7 @@
                 <td>@(location.PageVisible ? "Да" : "Нет")</td>
                 <td>
                     <a asp-area="Admin" asp-controller="Location" asp-action="Edit" asp-route-id="@location.Id" class="btn btn-primary btn-sm">Редактировать</a>
-                    <form href="#" method="post" style="display:inline;" onsubmit="return confirm('Удалить город?');">
+                    <form asp-area="Admin" asp-controller="Location" asp-action="Delete" asp-route-id="@location.Id" method="post" style="display:inline;" onsubmit="return confirm('Удалить локацию?');">
                         <input type="hidden" name="id" value="@location.Id" />
                         <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                     </form>
