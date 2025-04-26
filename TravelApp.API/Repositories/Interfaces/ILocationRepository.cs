@@ -10,5 +10,6 @@ namespace TravelApp.API.Repositories.Interfaces
         public Task UpdateAsync(Location location);
         public Task DeleteAsync(int id);
         public Task<IEnumerable<Location>> GetAllAsync();
+        public Task<IEnumerable<Location>> GetVisibleAsync();
     }
 }

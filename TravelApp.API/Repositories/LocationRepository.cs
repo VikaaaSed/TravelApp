@@ -173,6 +173,19 @@ namespace TravelApp.API.Repositories
                 return Enumerable.Empty<Location>();
             }
         }
+        public async Task<IEnumerable<Location>> GetVisibleAsync()
+        {
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                return await context.Locations.Where(n => n.PageVisible).OrderBy(n => n.Id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении списка локаций для отображения");
+                return Enumerable.Empty<Location>();
+            }
+        }
     }
 
 }
