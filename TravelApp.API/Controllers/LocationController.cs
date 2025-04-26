@@ -99,5 +99,16 @@ namespace TravelApp.API.Controllers
             if (locations == null) return NotFound();
             return Ok(locations);
         }
+        [HttpGet("GetVisibleLocationsByCityId/{cityId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<LocationInCity>>> GetVisibleLocationsByCityIdAsync(int cityId)
+        {
+            if (cityId <= 0) return BadRequest();
+            var locations = await _repositoryLocation.GetVisibleLocationByCityIdAsync(cityId);
+            if (locations == null) return NotFound();
+            return Ok(locations);
+        }
     }
 }
