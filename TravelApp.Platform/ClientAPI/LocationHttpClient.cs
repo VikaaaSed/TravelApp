@@ -41,7 +41,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/Location/GetLocationByCityId/{id}";
+                string url = $"{BaseUrl}/Location/GetLocationsByCityId/{id}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];

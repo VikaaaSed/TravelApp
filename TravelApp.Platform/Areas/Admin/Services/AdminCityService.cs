@@ -8,16 +8,17 @@ namespace TravelApp.Platform.Areas.Admin.Services
     public class AdminCityService : IAdminCityService
     {
         private readonly CityHttpClient _cityHttpClient;
-        private readonly LocationViewHttpClient _locationViewHttpClient;
+        private readonly LocationHttpClient _locationHttpClient;
         private readonly IAdminLocationService _adminLocationService;
-        public AdminCityService(CityHttpClient cityHttpClient, LocationViewHttpClient locationViewHttpClient,
+        public AdminCityService(CityHttpClient cityHttpClient, LocationHttpClient locationHttpClient,
             IAdminLocationService adminLocationService)
         {
             _cityHttpClient = cityHttpClient;
-            _locationViewHttpClient = locationViewHttpClient;
+            _locationHttpClient = locationHttpClient;
             _adminLocationService = adminLocationService;
         }
-
+        public async Task<City?> GetCityByPageNameAsync(string pageName)
+            => await _cityHttpClient.GetCityByPageNameAsync(pageName);
         public async Task<City> CreateCityAsync(City city)
             => await _cityHttpClient.CreateCityAsync(city);
         public async Task DeleteCityAsync(int cityId)
@@ -30,21 +31,18 @@ namespace TravelApp.Platform.Areas.Admin.Services
         public async Task<AllCityInformation> GetAllCityInformationAsync(int id)
         {
             City city = await GetCityAsync(id);
-            List<LocationInCity> locations = await GetLocationInCityByCityIdAsync(city.Id);
+            List<Location> locations = await GetLocationInCityByCityIdAsync(city.Id);
             return new AllCityInformation(city, locations);
         }
         public async Task<City> GetCityAsync(int cityId)
             => await _cityHttpClient.GetCityAsync(cityId);
-        public async Task<List<LocationInCity>> GetLocationInCityByCityIdAsync(int cityId)
+        public async Task<List<Location>> GetLocationInCityByCityIdAsync(int cityId)
         {
-            var result = await _locationViewHttpClient.GetLocationInCitiesByCityIdAsync(cityId);
+            var result = await _locationHttpClient.GetLocationByCityIdAsync(cityId);
             return result.ToList();
         }
         public async Task UpdateCityAsync(City city)
             => await _cityHttpClient.UpdateCityAsync(city);
-
-        public async Task<City?> GetCityByPageNameAsync(string pageName)
-            => await _cityHttpClient.GetCityByPageNameAsync(pageName);
 
         public async Task<int> DeleteLocationInCityAsync(int idLocation)
         {
@@ -53,6 +51,5 @@ namespace TravelApp.Platform.Areas.Admin.Services
             await _adminLocationService.DeleteLocation(idLocation);
             return idCity;
         }
-
     }
 }

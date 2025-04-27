@@ -11,8 +11,8 @@ namespace TravelApp.Platform.Areas.Admin.Services.Interfaces
         public Task DeleteCityAsync(int cityId);
         public Task<City> CreateCityAsync(City city);
         public Task<AllCityInformation> GetAllCityInformationAsync(int id);
-        public Task<List<LocationInCity>> GetLocationInCityByCityIdAsync(int cityId);
+        public Task<List<Location>> GetLocationInCityByCityIdAsync(int cityId);
         public Task<City?> GetCityByPageNameAsync(string pageName);
-        public Task<int> DeleteLocationInCityAsync(int idLocation);
+        public Task<int> DeleteLocationInCityAsync(int idLocation);        
     }
 }
