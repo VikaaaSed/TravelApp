@@ -168,5 +168,29 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<IEnumerable<API.Models.Location>> GetVisibleLocationByCityIdAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/Location/GetVisibleLocationsByCityId/{id}";
+
+                var response = await _httpClient.GetAsync(url);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при получении локации: {response.StatusCode}");
+                }
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Location>>() ?? throw new JsonException("Ошибка десериализации ответа");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetVisibleLocationByCityIdAsync");
+                throw;
+            }
+        }
     }
 }
