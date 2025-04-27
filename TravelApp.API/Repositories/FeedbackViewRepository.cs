@@ -44,5 +44,31 @@ namespace TravelApp.API.Repositories
                 return Enumerable.Empty<FeedbackView>();
             }
         }
+        public async Task<IEnumerable<FeedbackView>> GetAcceptedFeedbackByIdLocationAsync(int idLocation)
+        {
+            if (idLocation <= 0)
+            {
+                _logger.LogWarning("Передан некорректный idLocation: {IdLocation}", idLocation);
+                return Enumerable.Empty<FeedbackView>();
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var feedbacks = await context.Feedbacks
+                    .Where(n => n.IdLocation == idLocation && n.Accepted)
+                    .OrderByDescending(n => n.DateOfPublication)
+                    .ToListAsync();
+
+                if (!feedbacks.Any())
+                    _logger.LogInformation("Отзывы по локации с id {IdLocation} не найдены.", idLocation);
+
+                return feedbacks;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении отзывов по локации с id {IdLocation}", idLocation);
+                return Enumerable.Empty<FeedbackView>();
+            }
+        }
     }
 }

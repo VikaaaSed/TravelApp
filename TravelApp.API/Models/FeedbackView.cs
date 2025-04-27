@@ -8,5 +8,6 @@
         public required string Text { get; set; }
         public int Ball { get; set; }
         public DateTime DateOfPublication { get; set; }
+        public bool Accepted { get; set; }
     }
 }

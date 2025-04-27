@@ -31,5 +31,17 @@ namespace TravelApp.API.Controllers
         [HttpGet("GetFeedbackByIdLocation")]
         public async Task<ActionResult<IEnumerable<FeedbackView>>> GetFeedbackByIdLocationAsync(int idLocation)
             => Ok(await _feedbackViewRepository.GetFeedbackByIdLocationAsync(idLocation));
+
+        [HttpGet("GetAcceptedFeedback/{idLocation}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<FeedbackView>>> GetAcceptedFeedbackByIdLocationAsync(int idLocation)
+        {
+            if (idLocation <= 0) return BadRequest();
+            var Feedback = await _feedbackViewRepository.GetAcceptedFeedbackByIdLocationAsync(idLocation);
+            if (Feedback.Count() == 0 || Feedback == null) return NotFound();
+            return Ok(Feedback);
+        }
     }
 }
