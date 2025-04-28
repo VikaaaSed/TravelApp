@@ -22,6 +22,7 @@
 
                 string url = $"{BaseUrl}/Feedback/GetFeedbackByIdLocation?idLocation={idLocation}";
                 var response = await _httpClient.GetAsync(url);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
