@@ -8,5 +8,6 @@ namespace TravelApp.API.Repositories.Interfaces
         public Task<Feedback?> GetFeedbackAsync(int id);
         public Task UpdateFeedbackAsync(Feedback feedback);
         public Task AcceptedFeedbackAsync(int id);
+        public Task DeleteFeedbackAsync(int id);
     }
 }

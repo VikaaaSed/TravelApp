@@ -77,7 +77,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AcceptedFeedback(int id)
+        public async Task<ActionResult> AcceptedFeedback(int id)
         {
             if (id <= 0) return BadRequest();
 
@@ -85,6 +85,17 @@ namespace TravelApp.API.Controllers
             if (feedback == null) return NotFound();
 
             await _feedbackRepository.AcceptedFeedbackAsync(id);
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+            if (await _feedbackRepository.GetFeedbackAsync(id) == null) return NotFound();
+            await _feedbackRepository.DeleteFeedbackAsync(id);
             return NoContent();
         }
     }
