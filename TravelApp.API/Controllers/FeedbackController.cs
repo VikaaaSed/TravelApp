@@ -64,5 +64,14 @@ namespace TravelApp.API.Controllers
             if (feedback == null) return NotFound();
             return Ok(feedback);
         }
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Feedback?>> Update([FromBody] Feedback feedback)
+        {
+            if (feedback == null) return BadRequest();
+            await _feedbackRepository.UpdateCityAsync(feedback);
+            return NoContent();
+        }
     }
 }

@@ -66,5 +66,46 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
+        public async Task UpdateCityAsync(Feedback feedback)
+        {
+            if (feedback.Id <= 0)
+            {
+                _logger.LogWarning("Попытка обновить отзыв с некорректным Id: {id}", feedback.Id);
+                return;
+            }
+
+            await using var context = await _context.CreateDbContextAsync();
+            await using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+
+                var oldFeedback = await context.Feedbacks.SingleOrDefaultAsync(f => f.Id == feedback.Id);
+                if (oldFeedback == null)
+                {
+                    _logger.LogWarning("Попытка обновить несуществующий отзыв с id: {id}", feedback.Id);
+                    return;
+                }
+                oldFeedback.NameSender = feedback.NameSender;
+                oldFeedback.IsAccepted = feedback.IsAccepted;
+                oldFeedback.SenderIpAddress = feedback.SenderIpAddress;
+                oldFeedback.Text = feedback.Text;
+                oldFeedback.Ball = feedback.Ball;
+                oldFeedback.DateTime = feedback.DateTime;
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при сохранении изменений отзыва с id: {id}", feedback.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при обновления данных об отзыве по id: {id}", feedback.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }
