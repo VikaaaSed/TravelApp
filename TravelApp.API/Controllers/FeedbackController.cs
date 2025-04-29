@@ -70,7 +70,21 @@ namespace TravelApp.API.Controllers
         public async Task<ActionResult<Feedback?>> Update([FromBody] Feedback feedback)
         {
             if (feedback == null) return BadRequest();
-            await _feedbackRepository.UpdateCityAsync(feedback);
+            await _feedbackRepository.UpdateFeedbackAsync(feedback);
+            return NoContent();
+        }
+        [HttpPatch("Accepted/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AcceptedFeedback(int id)
+        {
+            if (id <= 0) return BadRequest();
+
+            var feedback = await _feedbackRepository.GetFeedbackAsync(id);
+            if (feedback == null) return NotFound();
+
+            await _feedbackRepository.AcceptedFeedbackAsync(id);
             return NoContent();
         }
     }

@@ -6,6 +6,7 @@ namespace TravelApp.API.Repositories.Interfaces
     {
         public Task<Feedback> CreateAsync(Feedback feedback);
         public Task<Feedback?> GetFeedbackAsync(int id);
-        public Task UpdateCityAsync(Feedback feedback);
+        public Task UpdateFeedbackAsync(Feedback feedback);
+        public Task AcceptedFeedbackAsync(int id);
     }
 }

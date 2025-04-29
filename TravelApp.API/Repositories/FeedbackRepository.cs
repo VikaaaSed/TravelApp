@@ -66,7 +66,7 @@ namespace TravelApp.API.Repositories
                 return null;
             }
         }
-        public async Task UpdateCityAsync(Feedback feedback)
+        public async Task UpdateFeedbackAsync(Feedback feedback)
         {
             if (feedback.Id <= 0)
             {
@@ -75,7 +75,6 @@ namespace TravelApp.API.Repositories
             }
 
             await using var context = await _context.CreateDbContextAsync();
-            await using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
 
@@ -92,18 +91,45 @@ namespace TravelApp.API.Repositories
                 oldFeedback.Ball = feedback.Ball;
                 oldFeedback.DateTime = feedback.DateTime;
                 await context.SaveChangesAsync();
-                await transaction.CommitAsync();
             }
             catch (DbUpdateException dbEx)
             {
                 _logger.LogError(dbEx, "Ошибка при сохранении изменений отзыва с id: {id}", feedback.Id);
-                await transaction.RollbackAsync();
                 throw;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Неизвестная ошибка при обновления данных об отзыве по id: {id}", feedback.Id);
-                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        public async Task AcceptedFeedbackAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Некорректный ID отзыва: {id}", id);
+                return;
+            }
+
+            await using var context = await _context.CreateDbContextAsync();
+
+            try
+            {
+                var feedback = await context.Feedbacks.SingleOrDefaultAsync(f => f.Id == id);
+                if (feedback == null)
+                {
+                    _logger.LogInformation("Отзыв с id '{id}' не найден.", id);
+                    return;
+                }
+
+                feedback.IsAccepted = true;
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Отзыв с id '{id}' помечен как принятый.", id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при принятии отзыва с id: {id}", id);
                 throw;
             }
         }
