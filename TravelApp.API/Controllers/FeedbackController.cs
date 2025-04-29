@@ -53,5 +53,16 @@ namespace TravelApp.API.Controllers
             if (Feedback.Count() == 0 || Feedback == null) return NotFound();
             return Ok(Feedback);
         }
+        [HttpGet("Get/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Feedback?>> GetAsync(int id)
+        {
+            if (id <= 0) return BadRequest();
+            var feedback = await _feedbackRepository.GetFeedbackAsync(id);
+            if (feedback == null) return NotFound();
+            return Ok(feedback);
+        }
     }
 }

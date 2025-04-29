@@ -44,5 +44,27 @@ namespace TravelApp.API.Repositories
                 throw;
             }
         }
+        public async Task<Feedback?> GetFeedbackAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка получить отзыва с некорректным Id: {id}", id);
+                return null;
+            }
+            try
+            {
+                await using var context = await _context.CreateDbContextAsync();
+                var feedback = await context.Feedbacks.FirstOrDefaultAsync(f => f.Id == id);
+
+                if (feedback == null)
+                    _logger.LogInformation("Отзыва с id '{id}' не найден.", id);
+                return feedback;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении отзыва по id: {id}", id);
+                return null;
+            }
+        }
     }
 }
