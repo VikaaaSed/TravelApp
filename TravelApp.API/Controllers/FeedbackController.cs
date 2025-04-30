@@ -98,5 +98,14 @@ namespace TravelApp.API.Controllers
             await _feedbackRepository.DeleteFeedbackAsync(id);
             return NoContent();
         }
+        [HttpGet("GetAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Feedback>>> GetAllAsync()
+        {
+            var feedbacks = await _feedbackRepository.GetAllAsync();
+            if (!feedbacks.Any()) return NotFound();
+            return Ok(feedbacks);
+        }
     }
 }
