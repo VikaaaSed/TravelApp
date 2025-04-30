@@ -35,6 +35,11 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             await _adminFeedbackService.DeleteFeedbackAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            Feedback? feedback = await _adminFeedbackService.GetFeedbackByIdAsync(id);
+            return View(feedback);
+        }
     }
 }

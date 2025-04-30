@@ -43,7 +43,7 @@
                         <input type="hidden" name="id" value="@feedback.Id" />
                         <button type="submit" class="btn btn-success btn-sm" @(feedback.IsAccepted ? "disabled" : "")>Подтвердить</button>
                     </form>
-                    <a href="#" class="btn btn-primary btn-sm">Редактировать</a>
+                    <a asp-controller="Feedback" asp-action="Edit" asp-area="Admin" asp-route-id="@feedback.Id" class="btn btn-primary btn-sm">Редактировать</a>
                     <form asp-controller="Feedback" asp-action="Delete" asp-area="Admin"
                           method="post" style="display:inline;" onsubmit="return confirm('Удалить отзыв?');">
                         <input type="hidden" name="id" value="@feedback.Id" />
