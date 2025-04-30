@@ -1,6 +1,20 @@
 ﻿@model IEnumerable<TravelApp.API.Models.Feedback>
 
+@{
+    var selectedValue = Context.Request.Query["isAccepted"].ToString();
+}
+
 <h2>Отзывы</h2>
+<form method="get" asp-action="Index">
+    <div class="form-group">
+        <label for="acceptedFilter">Фильтр по статусу:</label>
+        <select id="acceptedFilter" name="isAccepted" class="form-control" onchange="this.form.submit()">
+            <option value="true" selected="@(selectedValue == "true" ? "selected" : null)">Опубликованные</option>
+            <option value="false" selected="@(selectedValue == "false" ? "selected" : null)">Скрытые</option>
+            <option value="" selected="@(string.IsNullOrEmpty(selectedValue) ? "selected" : null)">Все</option>
+        </select>
+    </div>
+</form>
 
 <table class="table table-striped">
     <thead>

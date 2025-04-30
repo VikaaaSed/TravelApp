@@ -15,10 +15,13 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             _adminFeedbackService = adminFeedbackService;
         }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool? isAccepted)
         {
-            List<Feedback> result = await _adminFeedbackService.GetFeedbacksAsync();
-            return View(result);
+            List<Feedback> feedbacks = await _adminFeedbackService.GetFeedbacksAsync();
+            if (isAccepted.HasValue)
+                feedbacks = feedbacks.Where(f => f.IsAccepted == isAccepted.Value).ToList();
+            return View(feedbacks);
+
         }
     }
 }
