@@ -22,6 +22,8 @@ namespace TravelApp.Platform.Areas.Admin.Services
              => await _feedbackHttpClient.DeleteFeedbackAsync(id);
         public async Task<Feedback?> GetFeedbackByIdAsync(int id)
              => await _feedbackHttpClient.GetAsync(id);
+        public async Task UpdateFeedbackAsync(Feedback feedback)
+             => await _feedbackHttpClient.UpdateFeedbackAsync(feedback);
 
     }
 
