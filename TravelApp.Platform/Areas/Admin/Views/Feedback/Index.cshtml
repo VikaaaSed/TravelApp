@@ -1,0 +1,44 @@
+﻿@model IEnumerable<TravelApp.API.Models.Feedback>
+
+<h2>Отзывы</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>id Локации</th>
+            <th>Отправитель</th>
+            <th>Содержание</th>
+            <th>Балл</th>
+            <th>Статус</th>
+            <th>Дата отправления</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var feedback in Model)
+        {
+            <tr>
+                <td>@feedback.Id</td>
+                <td>@feedback.IdLocation</td>
+                <td>@feedback.NameSender</td>
+                <td>@feedback.Text</td>
+                @{
+                    string plainText = System.Text.RegularExpressions.Regex.Replace(feedback.Text ?? "", "<.*?>", string.Empty);
+                    string shortText = plainText.Length > 20 ? plainText.Substring(0, 17) + " ..." : plainText;
+                }
+                <td>@shortText</td>
+                <td>@feedback.Ball</td>
+                <td>@(feedback.IsAccepted ? "Опубликовано" : "Скыто")</td>
+                <td>@feedback.DateTime</td>
+                <td>
+                    <a href="#" class="btn btn-primary btn-sm">Редактировать</a>
+                    <form href="#" method="post" style="display:inline;" onsubmit="return confirm('Удалить отзыв?');">
+                        <input type="hidden" name="id" value="@feedback.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <caption>>:^) Всего: @Model.Count()</caption>
+</table>
