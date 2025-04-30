@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using TravelApp.API.Models;
+
 
 namespace TravelApp.Platform.ClientAPI
 {
@@ -14,7 +14,7 @@ namespace TravelApp.Platform.ClientAPI
             _httpClient = httpClient;
             _logger = logger;
         }
-        public async Task<Feedback> CreateFeedbackAsync(Feedback feedback)
+        public async Task<API.Models.Feedback> CreateFeedbackAsync(API.Models.Feedback feedback)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace TravelApp.Platform.ClientAPI
                     _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
                     throw new HttpRequestException($"Ошибка при создании отзыва: {response.StatusCode} - {responseContent}");
                 }
-                return JsonSerializer.Deserialize<Feedback>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+                return JsonSerializer.Deserialize<API.Models.Feedback>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
             }
             catch (Exception ex)
             {
@@ -33,5 +33,31 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<API.Models.Feedback?> GetAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/Feedback/Get/{id}";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при получении отзыва: {response.StatusCode}");
+                }
+                return await response.Content.ReadFromJsonAsync<API.Models.Feedback>() ?? throw new JsonException("Ошибка десериализации ответа");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetAsync");
+                throw;
+            }
+        }
+
     }
 }
