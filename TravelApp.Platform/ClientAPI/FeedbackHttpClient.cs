@@ -97,5 +97,27 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<IEnumerable<API.Models.Feedback>> GetAllAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{BaseUrl}/Feedback/GetAll");
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
+                    throw new HttpRequestException($"Ошибка при получении всех отзывов: {response.StatusCode}");
+                }
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.Feedback>>() ?? [];
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetAllAsync");
+                throw;
+            }
+        }
+
     }
 }
