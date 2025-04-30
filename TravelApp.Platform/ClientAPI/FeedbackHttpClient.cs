@@ -76,6 +76,26 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task DeleteFeedbackAsync(int id)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/Feedback/{id}";
+                var response = await _httpClient.DeleteAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("Ошибка удаления отзыва. Код: {StatusCode}, Ответ: {Content}",
+                        response.StatusCode, content);
 
+                    throw new HttpRequestException($"Ошибка удаления отзыва: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса DeleteFeedbackAsync");
+                throw;
+            }
+        }
     }
 }
