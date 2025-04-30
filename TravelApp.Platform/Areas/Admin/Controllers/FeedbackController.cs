@@ -23,5 +23,11 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             return View(feedbacks);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> Accepted(int id)
+        {
+            await _adminFeedbackService.AcceptedFeedbacksAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -22,10 +22,10 @@
             <th>id</th>
             <th>id Локации</th>
             <th>Отправитель</th>
-            <th>Содержание</th>
             <th>Балл</th>
             <th>Статус</th>
             <th>Дата отправления</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -35,16 +35,14 @@
                 <td>@feedback.Id</td>
                 <td>@feedback.IdLocation</td>
                 <td>@feedback.NameSender</td>
-                <td>@feedback.Text</td>
-                @{
-                    string plainText = System.Text.RegularExpressions.Regex.Replace(feedback.Text ?? "", "<.*?>", string.Empty);
-                    string shortText = plainText.Length > 20 ? plainText.Substring(0, 17) + " ..." : plainText;
-                }
-                <td>@shortText</td>
                 <td>@feedback.Ball</td>
-                <td>@(feedback.IsAccepted ? "Опубликовано" : "Скыто")</td>
+                <td>@(feedback.IsAccepted ? "Да" : "Нет")</td>
                 <td>@feedback.DateTime</td>
                 <td>
+                    <form asp-controller="Feedback" asp-action="Accepted" asp-area="Admin" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@feedback.Id" />
+                        <button type="submit" class="btn btn-success btn-sm" @(feedback.IsAccepted ? "disabled" : "")>Подтвердить</button>
+                    </form>
                     <a href="#" class="btn btn-primary btn-sm">Редактировать</a>
                     <form href="#" method="post" style="display:inline;" onsubmit="return confirm('Удалить отзыв?');">
                         <input type="hidden" name="id" value="@feedback.Id" />

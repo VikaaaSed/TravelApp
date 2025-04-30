@@ -16,6 +16,8 @@ namespace TravelApp.Platform.Areas.Admin.Services
             var feedback = await _feedbackHttpClient.GetAllAsync();
             return feedback.ToList();
         }
+        public async Task AcceptedFeedbacksAsync(int id)
+             => await _feedbackHttpClient.AcceptedFeedbackAsync(id);
     }
 
 }
