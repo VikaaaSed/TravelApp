@@ -72,5 +72,17 @@ namespace TravelApp.API.Controllers
             if (users == null || !users.Any()) return NotFound();
             return Ok(users);
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            if (id <= 0) return BadRequest();
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null) return NotFound();
+            await _userRepository.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

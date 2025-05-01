@@ -108,8 +108,38 @@ namespace TravelApp.API.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при получении списка всех локаций");
+                _logger.LogError(ex, "Ошибка при получении списка всех пользователей");
                 return [];
+            }
+        }
+        public async Task DeleteAsync(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("Попытка удаления пользователя с некорректным Id: {id}", id);
+                return;
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var location = await context.Users.SingleOrDefaultAsync(c => c.Id == id);
+                if (location == null)
+                {
+                    _logger.LogWarning("Попытка удаления несуществующего пользователя с id: {id}", id);
+                    return;
+                }
+                context.Users.Remove(location);
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Ошибка при удалении пользователя с id: {id}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Неизвестная ошибка при удалении пользователя по id: {id}", id);
+                throw;
             }
         }
     }
