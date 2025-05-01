@@ -6,7 +6,6 @@ namespace TravelApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<LocationViewHttpClient> _logger;
-        private const string BaseUrl = "https://localhost:7040/api";
 
         public LocationViewHttpClient(HttpClient httpClient, ILogger<LocationViewHttpClient> logger)
         {
@@ -24,7 +23,7 @@ namespace TravelApp.Platform.ClientAPI
                     return [];
                 }
 
-                string url = $"{BaseUrl}/Location/GetLocationsViewsByCityId?cityId={cityId}";
+                string url = $"Location/GetLocationsViewsByCityId?cityId={cityId}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -53,7 +52,7 @@ namespace TravelApp.Platform.ClientAPI
                     throw new ArgumentException("pageName не может быть пустым");
                 }
 
-                string url = $"{BaseUrl}/Location/GetLocationByPageName?pageName={Uri.EscapeDataString(pageName)}";
+                string url = $"Location/GetLocationByPageName?pageName={Uri.EscapeDataString(pageName)}";
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
 

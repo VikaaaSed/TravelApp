@@ -7,7 +7,6 @@ namespace TravelApp.Platform.ClientAPI
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<UserHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7040/api";
         public UserHttpClient(HttpClient httpClient, ILogger<UserHttpClient> logger)
         {
             _httpClient = httpClient;
@@ -17,7 +16,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/User", user);
+                var response = await _httpClient.PostAsJsonAsync("User", user);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 await EnsureSuccessAsync(response, "создании пользователя");
                 return JsonSerializer.Deserialize<API.Models.User>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
@@ -32,7 +31,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/User/{user.Id}", user);
+                var response = await _httpClient.PutAsJsonAsync($"User/{user.Id}", user);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 await EnsureSuccessAsync(response, "обновлении пользователя");
                 return;
@@ -53,7 +52,7 @@ namespace TravelApp.Platform.ClientAPI
                     throw new ArgumentException("Email не может быть пустым.", nameof(email));
                 }
 
-                string url = $"{BaseUrl}/User/by-email?email={Uri.EscapeDataString(email)}";
+                string url = $"User/by-email?email={Uri.EscapeDataString(email)}";
                 var response = await _httpClient.GetAsync(url);
 
                 if (response.StatusCode == HttpStatusCode.NotFound)

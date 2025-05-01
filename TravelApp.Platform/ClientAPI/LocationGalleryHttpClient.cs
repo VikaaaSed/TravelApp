@@ -7,7 +7,6 @@ namespace TravelApp.Platform.ClientAPI
         private readonly HttpClient _httpClient;
 
         private readonly ILogger<LocationGalleryHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7040/api";
         public LocationGalleryHttpClient(HttpClient httpClient,
             ILogger<LocationGalleryHttpClient> logger)
         {
@@ -18,7 +17,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/LocationGallery/GetGalleryByLocationId?locationId={locationId}";
+                string url = $"LocationGallery/GetGalleryByLocationId?locationId={locationId}";
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
 
@@ -41,7 +40,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/LocationGallery/{id}";
+                string url = $"LocationGallery/{id}";
 
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
@@ -65,7 +64,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/LocationGallery", gallery);
+                var response = await _httpClient.PostAsJsonAsync("LocationGallery", gallery);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -84,7 +83,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/LocationGallery", gallery);
+                var response = await _httpClient.PutAsJsonAsync("LocationGallery", gallery);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -104,7 +103,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"{BaseUrl}/LocationGallery/{id}";
+                string url = $"LocationGallery/{id}";
                 var response = await _httpClient.DeleteAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {

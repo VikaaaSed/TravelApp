@@ -20,9 +20,26 @@ if (env.IsDevelopment())
 // Добавление конфигурации для JwtSettings до остальных сервисов
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
 // Добавление сервисов и аутентификации
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<CityHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<CityViewHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<FeedbackHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<FeedbackViewHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<LocationGalleryHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<LocationHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<LocationViewHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<UserHttpClient>(ConfigureHttpClient);
+void ConfigureHttpClient(IServiceProvider sp, HttpClient client)
+{
+    var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+    client.BaseAddress = new Uri(settings.BaseUrl);
+}
 
 // Добавление аутентификации и JWT Bearer
 builder.Services.AddAuthentication(options =>

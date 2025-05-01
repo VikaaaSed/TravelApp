@@ -4,7 +4,6 @@
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<CityViewHttpClient> _logger;
-        private readonly string BaseUrl = "https://localhost:7040/api";
         public CityViewHttpClient(HttpClient httpClient, ILogger<CityViewHttpClient> logger)
         {
             _httpClient = httpClient;
@@ -14,7 +13,7 @@
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{BaseUrl}/City/GetCityInHomePage");
+                var response = await _httpClient.GetAsync("City/GetCityInHomePage");
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
@@ -33,7 +32,7 @@
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{BaseUrl}/City/GetVisibleCity");
+                var response = await _httpClient.GetAsync("City/GetVisibleCity");
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
