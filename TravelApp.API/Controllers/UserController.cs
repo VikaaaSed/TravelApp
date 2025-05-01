@@ -63,6 +63,14 @@ namespace TravelApp.API.Controllers
             await _userRepository.UpdateAsync(user);
             return Ok(user);
         }
-
+        [HttpGet("GetAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            if (users == null || !users.Any()) return NotFound();
+            return Ok(users);
+        }
     }
 }
