@@ -8,12 +8,10 @@ namespace TravelApp.Platform.Services
     public class CityService : ICityService
     {
         private readonly CityHttpClient _cityHttpClient;
-        private readonly LocationViewHttpClient _locationViewHttpClient;
         private readonly LocationHttpClient _locationHttpClient;
-        public CityService(CityHttpClient cityHttpClient, LocationViewHttpClient locationViewHttpClient, LocationHttpClient locationHttpClient)
+        public CityService(CityHttpClient cityHttpClient, LocationHttpClient locationHttpClient)
         {
             _cityHttpClient = cityHttpClient;
-            _locationViewHttpClient = locationViewHttpClient;
             _locationHttpClient = locationHttpClient;
         }
         public async Task<AllCityInformation> GetAllCityInformationByPageNameAsync(string pageName)

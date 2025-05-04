@@ -12,36 +12,6 @@ namespace TravelApp.Platform.ClientAPI
             _httpClient = httpClient;
             _logger = logger;
         }
-
-        public async Task<IEnumerable<API.Models.LocationInCity>> GetLocationInCitiesByCityIdAsync(int cityId)
-        {
-            try
-            {
-                if (cityId <= 0)
-                {
-                    _logger.LogWarning("Некорректный cityId: {CityId}", cityId);
-                    return [];
-                }
-
-                string url = $"Location/GetLocationsViewsByCityId?cityId={cityId}";
-                var response = await _httpClient.GetAsync(url);
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении представления локаций: {response.StatusCode}");
-                }
-
-                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.LocationInCity>>() ?? new List<API.Models.LocationInCity>();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при выполнении запроса GetLocationInCitiesByCityIdAsync");
-                throw;
-            }
-        }
-
         public async Task<API.Models.LocationInHomePage> GetLocationByPageNameAsync(string pageName)
         {
             try
@@ -52,15 +22,9 @@ namespace TravelApp.Platform.ClientAPI
                     throw new ArgumentException("pageName не может быть пустым");
                 }
 
-                string url = $"Location/GetLocationByPageName?pageName={Uri.EscapeDataString(pageName)}";
+                string url = $"Location/by-page?pageName={Uri.EscapeDataString(pageName)}";
                 var response = await _httpClient.GetAsync(url);
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении представления локации: {response.StatusCode}");
-                }
+                await EnsureSuccessAsync(response, "получении локации по pageName");
 
                 return await response.Content.ReadFromJsonAsync<API.Models.LocationInHomePage>() ?? throw new JsonException("Ошибка десериализации ответа");
             }
@@ -68,6 +32,15 @@ namespace TravelApp.Platform.ClientAPI
             {
                 _logger.LogError(ex, "Ошибка при выполнении запроса GetLocationByPageNameAsync");
                 throw;
+            }
+        }
+        private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Ошибка при {Context}. Код: {StatusCode}, Ответ: {Content}", context, response.StatusCode, content);
+                throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
     }
