@@ -13,13 +13,10 @@
         {
             try
             {
-                var response = await _httpClient.GetAsync("City/GetCityInHomePage");
-                var responseContent = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении всех представлений городов: {response.StatusCode}");
-                }
+                var response = await _httpClient.GetAsync("City/in-home-page");
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+
+                await EnsureSuccessAsync(response, "получения списка города для домашней страницы");
                 return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.CityInHomePage>>() ?? [];
             }
             catch (Exception ex)
@@ -32,19 +29,25 @@
         {
             try
             {
-                var response = await _httpClient.GetAsync("City/GetVisibleCity");
-                var responseContent = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении всех представлений городов: {response.StatusCode}");
-                }
+                var response = await _httpClient.GetAsync("City/in-home-page/visible");
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+
+                await EnsureSuccessAsync(response, "получения списка города для отображения на домашней страницы");
                 return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.CityInHomePage>>() ?? [];
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при выполнении запроса GetAllAsync");
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetVisibleAsync");
                 throw;
+            }
+        }
+        private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Ошибка при {Context}. Код: {StatusCode}, Ответ: {Content}", context, response.StatusCode, content);
+                throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
     }
