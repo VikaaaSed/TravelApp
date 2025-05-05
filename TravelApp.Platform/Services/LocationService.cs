@@ -54,7 +54,7 @@ namespace TravelApp.Platform.Services
 
         public async Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation)
         {
-            var result = await _feedbackViewHttpClient.GetAcceptedFeedbackByIdLocationAsync(idLocation);
+            var result = await _feedbackViewHttpClient.GetFeedbackByIdLocationAsync(idLocation, true);
             return result.ToList();
         }
 

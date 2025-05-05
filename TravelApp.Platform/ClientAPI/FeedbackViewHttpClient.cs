@@ -9,7 +9,7 @@
             _httpClient = httpClient;
             _logger = logger;
         }
-        public async Task<IEnumerable<API.Models.FeedbackView>> GetFeedbackByIdLocationAsync(int idLocation)
+        public async Task<IEnumerable<API.Models.FeedbackView>> GetFeedbackByIdLocationAsync(int idLocation, bool? accepted = null)
         {
             try
             {
@@ -19,16 +19,12 @@
                     return [];
                 }
 
-                string url = $"Feedback/GetFeedbackByIdLocation/{idLocation}";
+                string url = $"/api/locations/{idLocation}/feedbacks";
+                if (accepted is not null)
+                    url += $"?accepted={accepted.Value.ToString().ToLower()}";
                 var response = await _httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении отзывов: {response.StatusCode}");
-                }
+                await EnsureSuccessAsync(response, $"при получении списка отзывов по idLocation {idLocation}");
                 return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.FeedbackView>>() ?? new List<API.Models.FeedbackView>();
             }
             catch (Exception ex)
@@ -37,34 +33,13 @@
                 throw;
             }
         }
-
-        public async Task<IEnumerable<API.Models.FeedbackView>> GetAcceptedFeedbackByIdLocationAsync(int idLocation)
+        private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
         {
-            try
+            if (!response.IsSuccessStatusCode)
             {
-                if (idLocation <= 0)
-                {
-                    _logger.LogWarning("Некорректный idLocation: {IdLocation}", idLocation);
-                    return [];
-                }
-
-                string url = $"Feedback/GetAcceptedFeedback/{idLocation}";
-                var response = await _httpClient.GetAsync(url);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError("Ошибка HTTP {StatusCode}: {ResponseContent}", response.StatusCode, responseContent);
-                    throw new HttpRequestException($"Ошибка при получении отзывов: {response.StatusCode}");
-                }
-                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.FeedbackView>>() ?? new List<API.Models.FeedbackView>();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при выполнении запроса GetAcceptedFeedbackByIdLocationAsync");
-                throw;
+                var content = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Ошибка при {Context}. Код: {StatusCode}, Ответ: {Content}", context, response.StatusCode, content);
+                throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
     }

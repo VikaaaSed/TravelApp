@@ -16,7 +16,7 @@ namespace TravelApp.API.Repositories
             _logger = logger;
         }
 
-        public async Task<IEnumerable<FeedbackView>> GetFeedbackByIdLocationAsync(int idLocation)
+        public async Task<IEnumerable<FeedbackView>> GetFeedbackByIdLocationAsync(int idLocation, bool? accepted = null)
         {
             if (idLocation <= 0)
             {
@@ -28,35 +28,13 @@ namespace TravelApp.API.Repositories
 
             try
             {
-                var feedbacks = await context.Feedbacks
-                    .Where(n => n.IdLocation == idLocation)
-                    .OrderBy(n => n.Id)
-                    .ToListAsync();
+                var query = context.Feedbacks.Where(f => f.IdLocation == idLocation);
 
-                if (!feedbacks.Any())
-                    _logger.LogInformation("Отзывы по локации с id {IdLocation} не найдены.", idLocation);
+                if (accepted.HasValue)
+                    query = query.Where(f => f.Accepted == accepted.Value);
 
-                return feedbacks;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при получении отзывов по локации с id {IdLocation}", idLocation);
-                return Enumerable.Empty<FeedbackView>();
-            }
-        }
-        public async Task<IEnumerable<FeedbackView>> GetAcceptedFeedbackByIdLocationAsync(int idLocation)
-        {
-            if (idLocation <= 0)
-            {
-                _logger.LogWarning("Передан некорректный idLocation: {IdLocation}", idLocation);
-                return Enumerable.Empty<FeedbackView>();
-            }
-            await using var context = await _context.CreateDbContextAsync();
-            try
-            {
-                var feedbacks = await context.Feedbacks
-                    .Where(n => n.IdLocation == idLocation && n.Accepted)
-                    .OrderByDescending(n => n.DateOfPublication)
+                var feedbacks = await query
+                    .OrderBy(f => f.Id)
                     .ToListAsync();
 
                 if (!feedbacks.Any())
