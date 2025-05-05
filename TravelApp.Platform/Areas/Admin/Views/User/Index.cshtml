@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TravelApp.API.Models.User>
+
+<h2>Пользователи</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Логин</th>
+            <th>Тип пользователя</th>
+            <th>Регистрационный IP</th>
+            <th>Последний IP</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>@(user.UserType? "Администратор":"Пользователь")</td>
+                <td>@user.RegistrationIp</td>
+                <td>@user.LastIp</td>
+                <td>
+                    <form href="#" method="post" style="display:inline;" onsubmit="return confirm('Удалить место?');">
+                        <input type="hidden" name="id" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <caption>>:^) Всего: @Model.Count()</caption>
+</table>

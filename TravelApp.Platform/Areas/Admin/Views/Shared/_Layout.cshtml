@@ -18,10 +18,10 @@
             <h3>Меню</h3>
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link" href="#">Профиль</a></li>
-                <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="City">Города</a></li>
-                <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Location">Места</a></li>
-                <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Feedback">Отзывы</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Пользователи</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="City">Города</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Location">Места</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Feedback">Отзывы</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="User">Пользователи</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Настройки</a></li>
                 <li class="nav-item">
                     <form asp-controller="AdminPanel" asp-action="Logout" method="post" class="d-inline">
