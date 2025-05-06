@@ -23,5 +23,19 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             _logger.LogInformation("Список пользователей сформирован для отображения");
             return View(users);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _adminUserService.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при удалении пользователя с ID {id}", id);
+            }
+            return RedirectToAction("Index", "User", new { area = "Admin" });
+        }
     }
 }

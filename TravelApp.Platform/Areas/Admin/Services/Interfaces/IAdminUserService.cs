@@ -3,5 +3,6 @@
     public interface IAdminUserService
     {
         public Task<List<API.Models.User>> GetAll();
+        public Task Delete(int id);
     }
 }
