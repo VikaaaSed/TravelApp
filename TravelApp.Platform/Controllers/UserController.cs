@@ -70,7 +70,7 @@ namespace TravelApp.Platform.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddMinutes(30)
+                Expires = DateTime.UtcNow.AddMinutes(360)
             });
             return RedirectToAction("Index");
         }
