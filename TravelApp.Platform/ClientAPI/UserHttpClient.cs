@@ -42,6 +42,21 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task DeleteUserAsync(int id)
+        {
+            try
+            {
+                string url = $"User/{id}";
+                var response = await _httpClient.DeleteAsync(url);
+
+                await EnsureSuccessAsync(response, $"удаление пользователя по id={id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса DeleteAsync");
+                throw;
+            }
+        }
         public async Task<API.Models.User?> GetUserByEmailAsync(string email)
         {
             try
@@ -78,6 +93,39 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
+        public async Task<API.Models.User> GetUserAsync(int id)
+        {
+            try
+            {
+                string url = $"User/{id}";
+                var response = await _httpClient.GetAsync(url);
+
+                await EnsureSuccessAsync(response, $"получение пользователя по id={id}");
+                return await response.Content.ReadFromJsonAsync<API.Models.User>() ?? throw new JsonException("Ошибка десериализации ответа");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetUserAsync");
+                throw;
+            }
+        }
+        public async Task<IEnumerable<API.Models.User>> GetAllAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("User");
+                if (response.StatusCode == HttpStatusCode.NotFound) return [];
+
+
+                await EnsureSuccessAsync(response, "получение списка пользователей");
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.User>>() ?? [];
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetAllAsync");
+                throw;
+            }
+        }
         private async Task EnsureSuccessAsync(HttpResponseMessage response, string context)
         {
             if (!response.IsSuccessStatusCode)
@@ -87,6 +135,5 @@ namespace TravelApp.Platform.ClientAPI
                 throw new HttpRequestException($"Ошибка {context}: {response.StatusCode} - {content}");
             }
         }
-
     }
 }

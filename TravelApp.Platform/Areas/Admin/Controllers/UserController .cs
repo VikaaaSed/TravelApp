@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.Models;
+using TravelApp.Platform.Areas.Admin.Services.Interfaces;
 
 namespace TravelApp.Platform.Areas.Admin.Controllers
 {
@@ -8,10 +9,19 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IAdminUserService _adminUserService;
+        private readonly ILogger<UserController> _logger;
+        public UserController(IAdminUserService adminUserService, ILogger<UserController> logger)
         {
-            return View(new List<User>());
+            _adminUserService = adminUserService;
+            _logger = logger;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            List<User> users = await _adminUserService.GetAll();
+            _logger.LogInformation("Список пользователей сформирован для отображения");
+            return View(users);
         }
     }
 }
