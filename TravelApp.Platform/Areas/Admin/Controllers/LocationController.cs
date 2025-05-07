@@ -44,7 +44,7 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
                 foreach (var item in model.Gallery)
                     item.LocationId = location.Id;
             }
-            await _locationService.EditGallery(model.Gallery, model.Location.Id);
+            if (model.Gallery.Count != 0) await _locationService.EditGallery(model.Gallery, model.Location.Id);
             return RedirectToAction("Index");
         }
         [HttpGet]
