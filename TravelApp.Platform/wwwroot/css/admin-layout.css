@@ -45,12 +45,20 @@ button.nav-link {
     text-transform: none;
 }
 
-    button.nav-link:hover {
+button.nav-link:hover {
         text-decoration: underline;
         color: #0a58ca;
     }
 
-    button.nav-link:focus {
+button.nav-link:focus {
         outline: none;
         box-shadow: none;
     }
+
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1055;
+    min-width: 250px;
+}
