@@ -35,10 +35,10 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrEdit(City city)
         {
-            AllCityInformation model = new(city, await _cityService.GetLocationInCityByCityIdAsync(city.Id));
+            AllCityInformation model = new(city, city.Id != 0 ? await _cityService.GetLocationInCityByCityIdAsync(city.Id) : []);
             if (!ModelState.IsValid) return View("CreateOrEdit", model);
 
-            City c = await _cityService.GetCityByPageNameAsync(city.PageName);
+            City? c = await _cityService.GetCityByPageNameAsync(city.PageName);
             if (c != null && c.Id != city.Id)
             {
                 ModelState.AddModelError(nameof(city.PageName), "Страница с таким именем уже существует");
