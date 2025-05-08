@@ -10,17 +10,26 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
     public class UserController : Controller
     {
         private readonly IAdminUserService _adminUserService;
-        private readonly ILogger<UserController> _logger;
-        public UserController(IAdminUserService adminUserService, ILogger<UserController> logger)
+        private readonly INotificationService _notificationService;
+        public UserController(IAdminUserService adminUserService,
+            INotificationService notificationService)
         {
             _adminUserService = adminUserService;
-            _logger = logger;
+            _notificationService = notificationService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<User> users = await _adminUserService.GetAll();
-            _logger.LogInformation("Список пользователей сформирован для отображения");
+            List<User> users = null;
+            try
+            {
+                users = await _adminUserService.GetAll();
+            }
+            catch
+            {
+                _notificationService.Warning("Список пользователей пуст");
+            }
             return View(users);
         }
         [HttpPost]
@@ -30,10 +39,11 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             try
             {
                 await _adminUserService.Delete(id);
+                _notificationService.Success($"Пользователь с id={id} успешно удален!!!");
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Ошибка при удалении пользователя с ID {id}", id);
+                _notificationService.Error($"Ой! Произошла ошибка при удалении пользователя с id={id}");
             }
             return RedirectToAction("Index", "User", new { area = "Admin" });
         }
