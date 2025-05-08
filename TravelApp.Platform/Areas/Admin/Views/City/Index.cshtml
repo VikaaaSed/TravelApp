@@ -10,8 +10,6 @@
             <th>id</th>
             <th>Название</th>
             <th>Описание</th>
-            <th>Изображение (Основное)</th>
-            <th>Изображение (Дополнительное)</th>
             <th>Название страницы</th>
             <th>Отображать</th>
         </tr>
@@ -27,9 +25,6 @@
                     string shortText = plainText.Length > 20 ? plainText.Substring(0, 17) + " ..." : plainText;
                 }
                 <td>@shortText</td>
-
-                <td>@city.PictureAtHomeLink</td>
-                <td>@city.MainPictureLink</td>
                 <td>@city.PageName</td>
                 <td>@(city.PageVisible ? "Да" : "Нет")</td>
                 <td>

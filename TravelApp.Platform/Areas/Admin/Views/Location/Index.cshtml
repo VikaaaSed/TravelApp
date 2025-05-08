@@ -11,8 +11,6 @@
             <th>id Города</th>
             <th>Название</th>
             <th>Описание</th>
-            <th>Изображение (Основное)</th>
-            <th>Изображение (Дополнительное)</th>
             <th>Название страницы</th>
             <th>Отображать</th>
         </tr>
@@ -29,8 +27,6 @@
                     string shortText = plainText.Length > 20 ? plainText.Substring(0, 17) + " ..." : plainText;
                 }
                 <td>@shortText</td>
-                <td>@location.PicturePageLink</td>
-                <td>@location.PictureInCityLink</td>
                 <td>@location.PageName</td>
                 <td>@(location.PageVisible ? "Да" : "Нет")</td>
                 <td>
