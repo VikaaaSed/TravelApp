@@ -61,7 +61,7 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
                 try
                 {
                     await _cityService.CreateCityAsync(city);
-                    _notificationService.Success($"Город {city.PageName} успешно добавлен !!!");
+                    _notificationService.Success($"Город {city.PageName} успешно добавлен!!!");
                 }
                 catch
                 {
@@ -73,7 +73,7 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
                 try
                 {
                     await _cityService.UpdateCityAsync(city);
-                    _notificationService.Success($"Город {city.PageName} успешно изменен !!!");
+                    _notificationService.Success($"Город {city.PageName} успешно изменен!!!");
                 }
                 catch
                 {
@@ -91,7 +91,7 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             try
             {
                 await _cityService.DeleteCityAsync(id);
-                _notificationService.Success($"Город с id {id} успешно удален !!!");
+                _notificationService.Success($"Город с id {id} успешно удален!!!");
             }
             catch
             {
@@ -107,7 +107,7 @@ namespace TravelApp.Platform.Areas.Admin.Controllers
             try
             {
                 idCity = await _cityService.DeleteLocationInCityAsync(id);
-                _notificationService.Success($"Локация с id {id} успешно удалена !!!");
+                _notificationService.Success($"Локация с id {id} успешно удалена!!!");
             }
             catch
             {
