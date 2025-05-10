@@ -9,16 +9,15 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header class="kiwi-maru-regular">
         <nav class="background-gradient navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
-
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="https://imgur.com/dG5bgFV.png" class="rotateImg" width="65px" alt="Лого" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -43,24 +42,22 @@
             </div>
         </nav>
     </header>
-    <div>
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top mb-0 footer text-muted background-gradient">
-        <div class="container">
+    <main role="main" class="flex-grow-1">
+        @RenderBody()
+    </main>
 
+    <footer class="footer text-muted background-gradient py-2 mt-auto border-top">
+        <div class="container d-flex align-items-center">
             <span class="cat">
-                 /\_/\
+                /\_/\
                 ( o.o )
                 = ^ =
             </span>
-            &copy; 2025 - Сайт выполнен в качестве задания на диссертацию
+            <span class="ms-3">&copy; 2025 - Сайт выполнен в качестве задания на диссертацию</span>
         </div>
-
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
