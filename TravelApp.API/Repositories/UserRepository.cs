@@ -84,6 +84,7 @@ namespace TravelApp.API.Repositories
                     oldUser.PasswordHash = user.PasswordHash;
                     oldUser.Email = user.Email;
                     oldUser.LastIp = user.LastIp;
+                    oldUser.AvatarLink = user.AvatarLink;
                     await context.SaveChangesAsync();
                 }
             }

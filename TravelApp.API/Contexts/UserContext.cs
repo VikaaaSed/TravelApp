@@ -27,6 +27,7 @@ namespace TravelApp.API.Contexts
                 entity.Property("UserType").HasColumnName("typeuser");
                 entity.Property("RegistrationIp").HasColumnName("registrationip");
                 entity.Property("LastIp").HasColumnName("lastip");
+                entity.Property("AvatarLink").HasColumnName("avatar_link");
             });
         }
     }

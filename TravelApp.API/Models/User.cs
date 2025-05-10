@@ -11,6 +11,6 @@
         public bool UserType {  get; set; }
         public required string RegistrationIp { get; set; }
         public required string LastIp { get; set; }
-
+        public string? AvatarLink { get; set; }
     }
 }

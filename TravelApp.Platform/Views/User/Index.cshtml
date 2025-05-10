@@ -6,8 +6,10 @@
 
     <div class="card p-4 mb-4">
         <div class="d-flex align-items-center gap-3">
-
-            <div>
+            <img src="@(string.IsNullOrEmpty(Model.AvatarLink) ? Url.Content("~/defaultUserAvatar.jpg") : Model.AvatarLink)"
+                 class="rounded-circle"
+                 style="width: 60px; height: 60px;"
+                 alt="Аватар" />            <div>
                 <h5>@($"{Model.FirstName} {Model.LastName}")</h5>
                 <p class="text-muted mb-0">@Model.Email</p>
             </div>
