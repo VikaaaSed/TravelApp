@@ -1,47 +1,66 @@
-﻿@model TravelApp.API.Models.User
+﻿@model TravelApp.Platform.Models.AllUserInformation
 @{
     ViewData["Title"] = "Профиль";
 }
 <div class="container mt-4">
-
     <div class="card p-4 mb-4">
         <div class="d-flex align-items-center gap-3">
-            <img src="@(string.IsNullOrEmpty(Model.AvatarLink) ? Url.Content("~/defaultUserAvatar.jpg") : Model.AvatarLink)"
+            <img src="@(string.IsNullOrEmpty(Model.User.AvatarLink) ? Url.Content("~/defaultUserAvatar.jpg") : Model.User.AvatarLink)"
                  class="rounded-circle"
                  style="width: 60px; height: 60px;"
-                 alt="Аватар" />            <div>
-                <h5>@($"{Model.FirstName} {Model.LastName}")</h5>
-                <p class="text-muted mb-0">@Model.Email</p>
+                 alt="Аватар" />
+            <div>
+                <h5>@($"{Model.User.FirstName} {Model.User.LastName}")</h5>
+                <p class="text-muted mb-0">@Model.User.Email</p>
             </div>
             <div class="ms-auto">
                 <a href="#" class="btn btn-primary btn-sm">Редактировать профиль</a>
             </div>
         </div>
     </div>
-
     <ul class="nav nav-tabs mb-3" role="tablist">
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#places" role="tab">Куда сходить</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#followers" role="tab">Подписчики</a>
+            <a class="nav-link" data-bs-toggle="tab" href="#followers" role="tab">Подписчики</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#following" role="tab">Подписки</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#reviews" role="tab">Мои отзывы</a>
+            <a class="nav-link active" data-bs-toggle="tab" href="#reviews" role="tab">Мои отзывы</a>
         </li>
     </ul>
-
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="followers" role="tabpanel">
-        </div>
-        <div class="tab-pane fade" id="following" role="tabpanel">
-        </div>
-        <div class="tab-pane fade" id="reviews" role="tabpanel">
-        </div>
         <div class="tab-pane fade" id="places" role="tabpanel">
+            <p class="text-muted">Здесь появятся сохранённые места.</p>
+        </div>
+
+        <div class="tab-pane fade" id="followers" role="tabpanel">
+            <p class="text-muted">Здесь будет список подписчиков.</p>
+        </div>
+
+        <div class="tab-pane fade" id="following" role="tabpanel">
+            <p class="text-muted">Здесь будет список подписок.</p>
+        </div>
+
+        <div class="tab-pane fade show active" id="reviews" role="tabpanel">
+            @if (Model.Feedbacks != null && Model.Feedbacks.Any())
+            {
+                @foreach (var review in Model.Feedbacks)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <strong>Локация ID: @review.IdLocation</strong>
+                        <p>@review.Text</p>
+                        <small class="text-muted">Оценка: @review.Ball</small>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Вы пока не оставили отзывов.</p>
+            }
         </div>
     </div>
 </div>

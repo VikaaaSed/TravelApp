@@ -8,16 +8,18 @@ namespace TravelApp.Platform.Services
     public class UserService : IUserService
     {
         private readonly UserHttpClient _userHttpClient;
+        private readonly FeedbackHttpClient _feedbackHttpClient;
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
-            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
+            _feedbackHttpClient = feedbackHttpClient;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -68,5 +70,12 @@ namespace TravelApp.Platform.Services
 
         public async Task UpdateUserAsync(User user)
             => await _userHttpClient.UpdateUserAsync(user);
+
+        public async Task<List<Feedback>> GetUserFeedback(int id)
+        {
+            var result = await _feedbackHttpClient.GetAllAsync();
+            List<Feedback> feedbacks = result.Where(f => f.IdUser == id).ToList();
+            return feedbacks;
+        }
     }
 }

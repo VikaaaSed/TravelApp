@@ -23,7 +23,9 @@ namespace TravelApp.Platform.Controllers
         {
             var token = Request.Cookies["jwt_token"];
             var user = await _userService.GetUserByTokenAsync(token ?? "");
-            return View(user);
+            var fb = await _userService.GetUserFeedback(user.Id);
+            AllUserInformation userInformation = new AllUserInformation(user, fb);
+            return View(userInformation);
         }
         [HttpGet]
         public IActionResult Registration()
