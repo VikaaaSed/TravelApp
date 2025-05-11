@@ -51,7 +51,7 @@
                 @foreach (var review in Model.Feedbacks)
                 {
                     <div class="mb-3 border-bottom pb-2">
-                        <strong>Локация ID: @review.IdLocation</strong>
+                        <a asp-controller="Location" asp-action="Index" asp-route-pageName="@review.PageName">Локация: @review.Location</a>
                         <p>@review.Text</p>
                         <small class="text-muted">Оценка: @review.Ball</small>
                     </div>

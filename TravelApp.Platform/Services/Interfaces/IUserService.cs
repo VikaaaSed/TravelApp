@@ -11,6 +11,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<string?> AuthorizationUserAsync(UserAuthorization user);
         public Task UpdateUserAsync(User user);
         public Task<User?> GetUserByTokenAsync(string token);
-        public Task<List<Feedback>> GetUserFeedback(int id);
+        public Task<List<UserFeedback>> GetUserFeedback(int id);
     }
 }
