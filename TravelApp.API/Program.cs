@@ -30,6 +30,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 
+builder.Services.AddScoped<IFavoriteLocationRepository, FavoriteLocationRepository>();
+
 builder.Services.AddDbContextFactory<CityContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddDbContextFactory<CityInHomePageContext>(o => o.UseNpgsql(connectionString));
