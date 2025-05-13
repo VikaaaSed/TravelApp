@@ -49,7 +49,7 @@ namespace TravelApp.Platform.Services
             LocationInHomePage location = await GetLocationInHomePageByPageNameAsync(pageName);
             List<LocationGallery> gallery = await GetLocationGalleryByIdLocationAsync(location.Id);
             List<FeedbackView> feedbacks = await GetFeedbackViewByIdLocationAsync(location.Id);
-            return new AllLocationInformation(location, gallery, feedbacks);
+            return new AllLocationInformation(location, gallery, feedbacks, false);
         }
 
         public async Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation)
