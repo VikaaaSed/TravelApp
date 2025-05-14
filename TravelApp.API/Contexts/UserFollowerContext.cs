@@ -18,7 +18,7 @@ namespace TravelApp.API.Contexts
             {
                 entity.ToTable("user_follower");
                 entity.Property("Id").HasColumnName("id");
-                entity.Property("IdUser").HasColumnName("id_user ");
+                entity.Property("IdUser").HasColumnName("id_user");
                 entity.Property("IdFollower").HasColumnName("id_follower");
             });
         }
