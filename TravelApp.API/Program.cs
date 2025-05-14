@@ -52,6 +52,8 @@ builder.Services.AddDbContextFactory<LocationContext>(o => o.UseNpgsql(connectio
 
 builder.Services.AddDbContextFactory<FavoriteLocationContext>(o => o.UseNpgsql(connectionString));
 
+builder.Services.AddDbContextFactory<UserFollowerContext>(o => o.UseNpgsql(connectionString));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
