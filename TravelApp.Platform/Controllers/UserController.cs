@@ -23,8 +23,9 @@ namespace TravelApp.Platform.Controllers
         {
             var token = Request.Cookies["jwt_token"];
             var user = await _userService.GetUserByTokenAsync(token ?? "");
-            var fb = await _userService.GetUserFeedback(user.Id);
-            AllUserInformation userInformation = new AllUserInformation(user, fb);
+            var fb = await _userService.GetUserFeedbackAsync(user.Id);
+            var fl = await _userService.GetFavoriteLocationsAsync(user.Id);
+            AllUserInformation userInformation = new AllUserInformation(user, fb, fl);
             return View(userInformation);
         }
         [HttpGet]

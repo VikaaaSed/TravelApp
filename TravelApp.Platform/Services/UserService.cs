@@ -13,9 +13,11 @@ namespace TravelApp.Platform.Services
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly LocationHttpClient _locationHttpClient;
+        private readonly FavoriteLocationHttpClient _favoriteLocationHttpClient;
 
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
-            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, LocationHttpClient locationHttpClient)
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
+            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
@@ -23,6 +25,7 @@ namespace TravelApp.Platform.Services
             _jwtTokenService = jwtTokenService;
             _feedbackHttpClient = feedbackHttpClient;
             _locationHttpClient = locationHttpClient;
+            _favoriteLocationHttpClient = favoriteLocationHttpClient;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -74,7 +77,7 @@ namespace TravelApp.Platform.Services
         public async Task UpdateUserAsync(User user)
             => await _userHttpClient.UpdateUserAsync(user);
 
-        public async Task<List<UserFeedback>> GetUserFeedback(int id)
+        public async Task<List<UserFeedback>> GetUserFeedbackAsync(int id)
         {
             var feedbacksTask = _feedbackHttpClient.GetAllAsync();
             var locationsTask = _locationHttpClient.GetAllAsync();
@@ -93,6 +96,15 @@ namespace TravelApp.Platform.Services
                     feedback.Ball
                 )).ToList();
             return feedbacks;
+        }
+
+        public async Task<List<FavoriteLocationItem>> GetFavoriteLocationsAsync(int id)
+        {
+            var rFL = await _favoriteLocationHttpClient.GetByUserIdAsync(id);
+            var rL = await _locationHttpClient.GetAllAsync();
+            var result = rFL.Join(rL, f => f.IdLocation, l => l.Id, (favorite, location) 
+                => new FavoriteLocationItem(favorite.Id, location.Id, location.PageName, location.Title));
+            return result.ToList();
         }
     }
 }

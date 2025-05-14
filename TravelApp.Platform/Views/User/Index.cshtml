@@ -20,7 +20,7 @@
     </div>
     <ul class="nav nav-tabs mb-3" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#places" role="tab">Куда сходить</a>
+            <a class="nav-link" data-bs-toggle="tab" href="#places" role="tab">Избранное</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#followers" role="tab">Подписчики</a>
@@ -34,7 +34,19 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade" id="places" role="tabpanel">
-            <p class="text-muted">Здесь появятся сохранённые места.</p>
+            @if (Model.FavoriteLocations != null && Model.FavoriteLocations.Any())
+            {
+                @foreach (var favorite in Model.FavoriteLocations)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <a asp-controller="Location" asp-action="Index" asp-route-pageName="@favorite.PageName">Локация: @favorite.Title</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Список избранного пуст.</p>
+            }
         </div>
 
         <div class="tab-pane fade" id="followers" role="tabpanel">
