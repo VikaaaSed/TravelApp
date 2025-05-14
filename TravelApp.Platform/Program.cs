@@ -12,10 +12,24 @@ using TravelApp.Platform.Areas.Admin.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 var env = builder.Environment;
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
 if (env.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+
+var jwtSettings = builder.Configuration
+    .GetSection("JwtSettings")
+    .Get<JwtSettings>();
+
+if (string.IsNullOrWhiteSpace(jwtSettings?.Key))
+    throw new Exception("JWT ключ не удалось получить");
 
 // Добавление конфигурации для JwtSettings до остальных сервисов
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
@@ -49,8 +63,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var jwtSettings = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<JwtSettings>>().Value;
-
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
