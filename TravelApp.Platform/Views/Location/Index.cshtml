@@ -8,10 +8,10 @@
         <h2 class="kiwi-maru-regular text-center my-5">Немного из истории</h2>
         @if (User.Identity.IsAuthenticated)
         {
-            var iconUrl = Model.IsFavorites ? "https://img.icons8.com/dotty/80/bookmark-ribbon.png"
-            : "https://img.icons8.com/dotty/80/favorites.png";
+            var iconUrl = Model.IsFavorites ? "https://i.postimg.cc/XqG5VbvK/Frame-38.png"
+            : "https://i.postimg.cc/mD6MfDT2/Frame-39.png";
 
-            <form href="#" method="get" class="d-inline">
+            <form asp-controller="Location" asp-action="ChangeFavoriteLocation" method="post" class="d-inline">
                 <input type="hidden" name="pageName" value="@Model.Location.PageName" />
                 <button type="submit" title="Добавить в избранное" class="border-0 bg-transparent p-0">
                     <img src="@iconUrl" alt="Избранное" class="favorite-icon" />

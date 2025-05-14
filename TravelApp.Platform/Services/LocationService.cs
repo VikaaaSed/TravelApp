@@ -13,11 +13,13 @@ namespace TravelApp.Platform.Services
         private readonly FeedbackHttpClient _feedbackHttpClient;
         private readonly IClientIpService _clientIpService;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly IFavoriteLocationService _favoriteLocationService;
         public LocationService(LocationViewHttpClient locationViewHttpClient,
             LocationGalleryHttpClient locationGalleryHttpClient,
             FeedbackViewHttpClient feedbackViewHttpClient,
             FeedbackHttpClient feedbackHttpClient,
-            IClientIpService clientIpService, IJwtTokenService jwtTokenService)
+            IClientIpService clientIpService, IJwtTokenService jwtTokenService,
+            IFavoriteLocationService favoriteLocationService)
         {
             _locationViewHttpClient = locationViewHttpClient;
             _locationGalleryHttpClient = locationGalleryHttpClient;
@@ -25,6 +27,7 @@ namespace TravelApp.Platform.Services
             _feedbackHttpClient = feedbackHttpClient;
             _clientIpService = clientIpService;
             _jwtTokenService = jwtTokenService;
+            _favoriteLocationService = favoriteLocationService;
         }
         public async Task<Feedback> CreateFeedbackAsync(Feedback feedback)
         {
@@ -44,12 +47,22 @@ namespace TravelApp.Platform.Services
             return await CreateFeedbackAsync(feedback);
         }
 
-        public async Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName)
+        public async Task<AllLocationInformation> GetAllLocationInformationAsync(string pageName, string token)
         {
             LocationInHomePage location = await GetLocationInHomePageByPageNameAsync(pageName);
             List<LocationGallery> gallery = await GetLocationGalleryByIdLocationAsync(location.Id);
             List<FeedbackView> feedbacks = await GetFeedbackViewByIdLocationAsync(location.Id);
-            return new AllLocationInformation(location, gallery, feedbacks, false);
+            bool IsFavorite = false;
+            if (!string.IsNullOrEmpty(token))
+            {
+                var id = _jwtTokenService.GetUserIdFromToken(token);
+                if (!string.IsNullOrEmpty(id) && int.TryParse(id, out int userId))
+                {
+                    List<FavoriteLocation> fl = await _favoriteLocationService.GetByUserIdAsync(userId);
+                    if (fl.Where(l => l.IdLocation == location.Id).Any()) IsFavorite = true;
+                }
+            }
+            return new AllLocationInformation(location, gallery, feedbacks, IsFavorite);
         }
 
         public async Task<List<FeedbackView>> GetFeedbackViewByIdLocationAsync(int idLocation)
@@ -69,5 +82,23 @@ namespace TravelApp.Platform.Services
 
         public string? GetUserFirstAndLastName(string token)
             => (!string.IsNullOrEmpty(token)) ? _jwtTokenService.GetNameUserFromToken(token) : null;
+
+        public async Task ChangeFavoriteLocation(string pageName, string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                var id = _jwtTokenService.GetUserIdFromToken(token);
+                if (!string.IsNullOrEmpty(id) && int.TryParse(id, out int userId))
+                {
+                    LocationInHomePage location = await GetLocationInHomePageByPageNameAsync(pageName);
+                    List<FavoriteLocation> fl = await _favoriteLocationService.GetByUserIdAsync(userId);
+
+                    FavoriteLocation? f = fl.FirstOrDefault(f => f.IdLocation == location.Id);
+
+                    if (f != null) await _favoriteLocationService.DeleteAsync(f.Id);
+                    else await _favoriteLocationService.CreateAsync(new FavoriteLocation { Id = 0, IdLocation = location.Id, IdUser = userId });
+                }
+            }
+        }
     }
 }

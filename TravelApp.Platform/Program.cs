@@ -100,6 +100,7 @@ builder.Services.AddScoped<IAdminLocationService, AdminLocationService>();
 builder.Services.AddScoped<IAdminFeedbackService, AdminFeedbackService>();
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<INotificationService, TempDataNotificationService>();
+builder.Services.AddScoped<IFavoriteLocationService, FavoriteLocationService>();
 
 var app = builder.Build();
 
