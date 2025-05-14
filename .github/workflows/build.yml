@@ -1,0 +1,35 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
+
+  Jwt__Key: ${{ secrets.JWT_KEY }}
+  Jwt__Issuer: ${{ secrets.JWT_ISSUER }}
+  Jwt__Audience: ${{ secrets.JWT_AUDIENCE }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore TravelApp.Platform.sln
+
+    - name: Build solution
+      run: dotnet build TravelApp.Platform.sln --configuration Release --no-restore
