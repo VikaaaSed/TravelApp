@@ -91,5 +91,25 @@ namespace TravelApp.Platform.Controllers
             Response.Cookies.Delete("jwt_token");
             return RedirectToAction("Authorization");
         }
+        [Authorize]
+        [HttpGet("[controller]/profile/{id}")]
+        [HttpGet("[controller]/index/{id}")]
+        public async Task<IActionResult> Index(int id)
+        {
+            var userTask = _userService.GetAsync(id);
+            var feedbackTask = _userService.GetUserFeedbackAsync(id);
+            var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(id);
+            var followerTask = _userService.GetUserFollowerAsync(id);
+
+            await Task.WhenAll(userTask, feedbackTask, favoriteLocationsTask, followerTask);
+
+            var user = userTask.Result;
+            var feedback = feedbackTask.Result;
+            var favoriteLocations = favoriteLocationsTask.Result;
+            var follower = followerTask.Result;
+            if (user == null) return NotFound();
+            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, follower);
+            return View(userInformation);
+        }
     }
 }

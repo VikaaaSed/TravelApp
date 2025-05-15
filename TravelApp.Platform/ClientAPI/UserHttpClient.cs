@@ -93,15 +93,19 @@ namespace TravelApp.Platform.ClientAPI
                 throw;
             }
         }
-        public async Task<API.Models.User> GetUserAsync(int id)
+        public async Task<API.Models.User?> GetUserAsync(int id)
         {
             try
             {
                 string url = $"User/{id}";
                 var response = await _httpClient.GetAsync(url);
-
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Пользователь с id '{id}' не найден.", id);
+                    return null;
+                }
                 await EnsureSuccessAsync(response, $"получение пользователя по id={id}");
-                return await response.Content.ReadFromJsonAsync<API.Models.User>() ?? throw new JsonException("Ошибка десериализации ответа");
+                return await response.Content.ReadFromJsonAsync<API.Models.User?>() ?? throw new JsonException("Ошибка десериализации ответа");
             }
             catch (Exception ex)
             {

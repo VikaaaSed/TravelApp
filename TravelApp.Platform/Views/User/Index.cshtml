@@ -54,7 +54,28 @@
         </div>
 
         <div class="tab-pane fade" id="following" role="tabpanel">
-            <p class="text-muted">Здесь будет список подписок.</p>
+            @if (Model.Followers != null && Model.Followers.Any())
+            {
+                @foreach (var follower in Model.Followers)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <a asp-action="Index" asp-controller="User" asp-route-id="@follower.FollowerId">
+                            <img src="@(string.IsNullOrEmpty(follower.AvatarLink) ? Url.Content("~/defaultUserAvatar.jpg") : follower.AvatarLink)"
+                                 class="rounded-circle"
+                                 style="width: 60px; height: 60px;"
+                                 alt="Аватар" />
+                            <div>
+                                <h5>@($"{follower.FollowerFirstName} {follower.FollowerLastName}")</h5>
+                            </div>
+
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Список подписок пуст.</p>
+            }
         </div>
 
         <div class="tab-pane fade show active" id="reviews" role="tabpanel">

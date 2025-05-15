@@ -15,5 +15,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<List<FavoriteLocationItem>> GetFavoriteLocationsAsync(int id);
         public Task<List<User>> GetAllAsync();
         public Task<List<Follower>> GetUserFollowerAsync(int id);
+        public Task<User?> GetAsync(int id);
     }
 }
