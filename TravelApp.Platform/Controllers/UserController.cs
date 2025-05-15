@@ -25,15 +25,17 @@ namespace TravelApp.Platform.Controllers
             var user = await _userService.GetUserByTokenAsync(token ?? "");
             var feedbackTask = _userService.GetUserFeedbackAsync(user.Id);
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(user.Id);
-            var followerTask = _userService.GetUserFollowerAsync(user.Id);
+            var subscriptionsTask = _userService.GetUserSubscriptionsAsync(user.Id);
+            var followersTask = _userService.GetUserFollowersAsync(user.Id);
 
-            await Task.WhenAll(feedbackTask, favoriteLocationsTask, followerTask);
+            await Task.WhenAll(feedbackTask, favoriteLocationsTask, subscriptionsTask, followersTask);
 
             var feedback = feedbackTask.Result;
             var favoriteLocations = favoriteLocationsTask.Result;
-            var follower = followerTask.Result;
+            var followers = followersTask.Result;
+            var subscriptions = subscriptionsTask.Result;
 
-            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, follower);
+            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, subscriptions, followers);
             return View(userInformation);
         }
         [HttpGet]
@@ -99,16 +101,19 @@ namespace TravelApp.Platform.Controllers
             var userTask = _userService.GetAsync(id);
             var feedbackTask = _userService.GetUserFeedbackAsync(id);
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(id);
-            var followerTask = _userService.GetUserFollowerAsync(id);
+            var subscriptionsTask = _userService.GetUserSubscriptionsAsync(id);
+            var followersTask = _userService.GetUserFollowersAsync(id);
 
-            await Task.WhenAll(userTask, feedbackTask, favoriteLocationsTask, followerTask);
+            await Task.WhenAll(userTask, feedbackTask, favoriteLocationsTask, subscriptionsTask, followersTask);
 
             var user = userTask.Result;
             var feedback = feedbackTask.Result;
             var favoriteLocations = favoriteLocationsTask.Result;
-            var follower = followerTask.Result;
+            var subscriptions = subscriptionsTask.Result;
+            var followers = followersTask.Result;
             if (user == null) return NotFound();
-            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations, follower);
+            AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations,
+                subscriptions, followers);
             return View(userInformation);
         }
     }

@@ -115,10 +115,36 @@ namespace TravelApp.Platform.Services
             return result.ToList();
         }
 
-        public async Task<List<Follower>> GetUserFollowerAsync(int id)
+        public async Task<List<Follower>> GetUserSubscriptionsAsync(int id)
         {
             var userTask = GetAllAsync();
-            var followerTask = _userFollowerService.GetByUserIdAsync(id);
+            var subscriptionTask = _userFollowerService.GetByUserIdAsync(id);
+
+            await Task.WhenAll(userTask, subscriptionTask);
+
+            var userResult = userTask.Result;
+            var subscriptionResult = subscriptionTask.Result;
+
+            var result = subscriptionResult.Join(userResult, f => f.IdFollower, u => u.Id, (subscription, user)
+                => new Follower(
+                    subscription.Id,
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.AvatarLink)
+                ).ToList();
+            return result;
+        }
+
+        public async Task<User?> GetAsync(int id)
+        {
+            return await _userHttpClient.GetUserAsync(id);
+        }
+
+        public async Task<List<Follower>> GetUserFollowersAsync(int id)
+        {
+            var userTask = GetAllAsync();
+            var followerTask = _userFollowerService.GetByFollowerIdAsync(id);
 
             await Task.WhenAll(userTask, followerTask);
 
@@ -134,11 +160,6 @@ namespace TravelApp.Platform.Services
                     user.AvatarLink)
                 ).ToList();
             return result;
-        }
-
-        public async Task<User?> GetAsync(int id)
-        {
-            return await _userHttpClient.GetUserAsync(id);
         }
     }
 }
