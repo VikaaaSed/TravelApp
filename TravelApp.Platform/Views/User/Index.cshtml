@@ -54,9 +54,9 @@
         </div>
 
         <div class="tab-pane fade" id="following" role="tabpanel">
-            @if (Model.Followers != null && Model.Followers.Any())
+            @if (Model.Subscriptions != null && Model.Subscriptions.Any())
             {
-                @foreach (var follower in Model.Followers)
+                @foreach (var follower in Model.Subscriptions)
                 {
                     <div class="mb-3 border-bottom pb-2">
                         <a asp-action="Index" asp-controller="User" asp-route-id="@follower.FollowerId">

@@ -48,7 +48,7 @@ namespace TravelApp.Platform.ClientAPI
         {
             try
             {
-                string url = $"/api/users/{idUser}/followers";
+                string url = $"/api/users/{idUser}/subscriptions";
 
                 var response = await _httpClient.GetAsync(url);
 
