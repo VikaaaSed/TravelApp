@@ -52,7 +52,7 @@ namespace TravelApp.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("/api/users/{userId}/followers")]
+        [HttpGet("/api/users/{userId}/subscriptions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -107,6 +107,26 @@ namespace TravelApp.API.Controllers
 
             _logger.LogInformation("Создана новая запись с id={id}", newfollower.Id);
             return Created($"/api/UserFollower/{newfollower.Id}", newfollower);
+        }
+        [HttpGet("/api/users/{userId}/followers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<UserFollower>>> GetByFollowerId(int userId)
+        {
+            if (userId <= 0)
+            {
+                _logger.LogWarning("Попытка поиска с некорректным id={id}", userId);
+                return BadRequest();
+            }
+            var result = await _repository.GetByFollowerIdAsync(userId);
+            if (result == null)
+            {
+                _logger.LogWarning("Запись с id={id} не найден", userId);
+                return NotFound();
+            }
+            _logger.LogInformation("Записи о подписчиках успешно получены");
+            return Ok(result);
         }
     }
 }

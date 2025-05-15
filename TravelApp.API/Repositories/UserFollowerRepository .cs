@@ -112,11 +112,35 @@ namespace TravelApp.API.Repositories
             }
         }
 
+        public async Task<List<UserFollower>> GetByFollowerIdAsync(int idFollower)
+        {
+            if (idFollower <= 0)
+            {
+                _logger.LogWarning("Попытка получить запись о подписчике с некорректным idFollower: {idFollower}", idFollower);
+                return [];
+            }
+            await using var context = await _context.CreateDbContextAsync();
+            try
+            {
+                var followers = await context.Followers.Where(fl => fl.IdFollower == idFollower).ToListAsync() ?? [];
+
+                if (followers.Count == 0)
+                    _logger.LogInformation("Список подписчиков для пользователя с id '{id}' не найден.", idFollower);
+
+                return followers;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении списка подписчиков для пользователя по id: {id}", idFollower);
+                return [];
+            }
+        }
+
         public async Task<List<UserFollower>> GetByUserIdAsync(int idUser)
         {
             if (idUser <= 0)
             {
-                _logger.LogWarning("Попытка получить запись о подписчике с некорректным idUser: {idUser}", idUser);
+                _logger.LogWarning("Попытка получить запись о подписках пользователя с некорректным idUser: {idUser}", idUser);
                 return [];
             }
             await using var context = await _context.CreateDbContextAsync();
@@ -126,13 +150,13 @@ namespace TravelApp.API.Repositories
 
 
                 if (followers.Count == 0)
-                    _logger.LogInformation("Список подписчиков для пользователя с id '{id}' не найден.", idUser);
+                    _logger.LogInformation("Список подписок для пользователя с id '{id}' не найден.", idUser);
 
                 return followers;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при получении списка подписчиков для пользователя по id: {id}", idUser);
+                _logger.LogError(ex, "Ошибка при получении списка подписок для пользователя по id: {id}", idUser);
                 return [];
             }
         }
