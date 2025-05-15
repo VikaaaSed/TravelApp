@@ -50,6 +50,7 @@ builder.Services.AddHttpClient<LocationHttpClient>(ConfigureHttpClient);
 builder.Services.AddHttpClient<LocationViewHttpClient>(ConfigureHttpClient);
 builder.Services.AddHttpClient<UserHttpClient>(ConfigureHttpClient);
 builder.Services.AddHttpClient<FavoriteLocationHttpClient>(ConfigureHttpClient);
+builder.Services.AddHttpClient<UserFollowerHttpClient>(ConfigureHttpClient);
 void ConfigureHttpClient(IServiceProvider sp, HttpClient client)
 {
     var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
