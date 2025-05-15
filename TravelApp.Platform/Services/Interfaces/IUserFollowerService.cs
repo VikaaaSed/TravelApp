@@ -8,5 +8,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<List<UserFollower>> GetByUserIdAsync(int id);
         public Task<UserFollower> CreateAsync(UserFollower Follower);
         public Task DeleteAsync(int id);
+        public Task<List<UserFollower>> GetByFollowerIdAsync(int id);
     }
 }

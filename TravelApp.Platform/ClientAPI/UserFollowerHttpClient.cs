@@ -56,7 +56,7 @@ namespace TravelApp.Platform.ClientAPI
 
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                await EnsureSuccessAsync(response, $"получения списка подписчиков пользователя с id={idUser}");
+                await EnsureSuccessAsync(response, $"получения списка подписок пользователя с id={idUser}");
                 if (string.IsNullOrWhiteSpace(responseContent)) return [];
 
                 return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.UserFollower>>() ?? [];
@@ -64,6 +64,29 @@ namespace TravelApp.Platform.ClientAPI
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при выполнении запроса GetByUserIdAsync");
+                throw;
+            }
+        }
+        public async Task<IEnumerable<API.Models.UserFollower>> GetByFollowerIdAsync(int idUser)
+        {
+            try
+            {
+                string url = $"/api/users/{idUser}/followers";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return [];
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                await EnsureSuccessAsync(response, $"получения списка подписчиков пользователя с id={idUser}");
+                if (string.IsNullOrWhiteSpace(responseContent)) return [];
+
+                return await response.Content.ReadFromJsonAsync<IEnumerable<API.Models.UserFollower>>() ?? [];
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выполнении запроса GetByFollowerIdAsync");
                 throw;
             }
         }

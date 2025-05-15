@@ -33,5 +33,10 @@ namespace TravelApp.Platform.Services
             var result = await _httpClient.GetByUserIdAsync(id);
             return result.ToList();
         }
+        public async Task<List<UserFollower>> GetByFollowerIdAsync(int id)
+        {
+            var result = await _httpClient.GetByFollowerIdAsync(id);
+            return result.ToList();
+        }
     }
 }
