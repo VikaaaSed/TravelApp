@@ -7,12 +7,14 @@ namespace TravelApp.Platform.Models
         public User User;
         public List<UserFeedback> Feedbacks;
         public List<FavoriteLocationItem> FavoriteLocations;
+        public List<Follower> Followers;
         public AllUserInformation(User user, List<UserFeedback> feedbacks, 
-            List<FavoriteLocationItem> favoriteLocations)
+            List<FavoriteLocationItem> favoriteLocations, List<Follower> followers)
         {
             User = user;
             Feedbacks = feedbacks;
             FavoriteLocations = favoriteLocations;
+            Followers = followers;
         }
     }
 }

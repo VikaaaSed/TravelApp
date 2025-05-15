@@ -13,5 +13,7 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<User?> GetUserByTokenAsync(string token);
         public Task<List<UserFeedback>> GetUserFeedbackAsync(int id);
         public Task<List<FavoriteLocationItem>> GetFavoriteLocationsAsync(int id);
+        public Task<List<User>> GetAllAsync();
+        public Task<List<Follower>> GetUserFollowerAsync(int id);
     }
 }

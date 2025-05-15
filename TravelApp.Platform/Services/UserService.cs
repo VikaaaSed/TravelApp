@@ -14,10 +14,11 @@ namespace TravelApp.Platform.Services
         private readonly IJwtTokenService _jwtTokenService;
         private readonly LocationHttpClient _locationHttpClient;
         private readonly FavoriteLocationHttpClient _favoriteLocationHttpClient;
+        private readonly IUserFollowerService _userFollowerService;
 
         public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
             IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
-            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient)
+            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient, IUserFollowerService userFollowerService)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
@@ -26,6 +27,7 @@ namespace TravelApp.Platform.Services
             _feedbackHttpClient = feedbackHttpClient;
             _locationHttpClient = locationHttpClient;
             _favoriteLocationHttpClient = favoriteLocationHttpClient;
+            _userFollowerService = userFollowerService;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -105,6 +107,33 @@ namespace TravelApp.Platform.Services
             var result = rFL.Join(rL, f => f.IdLocation, l => l.Id, (favorite, location) 
                 => new FavoriteLocationItem(favorite.Id, location.Id, location.PageName, location.Title));
             return result.ToList();
+        }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            var result = await _userHttpClient.GetAllAsync();
+            return result.ToList();
+        }
+
+        public async Task<List<Follower>> GetUserFollowerAsync(int id)
+        {
+            var userTask = GetAllAsync();
+            var followerTask = _userFollowerService.GetByUserIdAsync(id);
+
+            await Task.WhenAll(userTask, followerTask);
+
+            var userResult = userTask.Result;
+            var followerResult = followerTask.Result;
+
+            var result = followerResult.Join(userResult, f => f.IdUser, u => u.Id, (follower, user)
+                => new Follower(
+                    follower.Id,
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.AvatarLink)
+                ).ToList();
+            return result;
         }
     }
 }
