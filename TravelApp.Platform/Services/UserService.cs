@@ -151,7 +151,7 @@ namespace TravelApp.Platform.Services
             var userResult = userTask.Result;
             var followerResult = followerTask.Result;
 
-            var result = followerResult.Join(userResult, f => f.IdFollower, u => u.Id, (follower, user)
+            var result = followerResult.Join(userResult, f => f.IdUser, u => u.Id, (follower, user)
                 => new Follower(
                     follower.Id,
                     user.Id,
