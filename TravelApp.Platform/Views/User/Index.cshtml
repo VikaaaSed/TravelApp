@@ -18,6 +18,25 @@
             </div>
         </div>
     </div>
+    <h2>Персональные рекомендации</h2>
+    <div class="gallery-container">
+        <button class="scroll-btn left" onclick="scrollGallery(-300)">&#10094;</button>
+
+        <div class="gallery-scroll" id="gallery">
+            @foreach (var item in Model.Recommendations)
+            {
+                <div class="item">
+                    <a asp-controller="Location" asp-action="index" asp-route-pageName="@item.PageName">
+                        <img src="@item.LinkImage" alt="@item.LinkImage">
+                        <div class="centered">@item.Title</div>
+                        <span class="bottom-right badge bg-success rounded-pill">@item.Rating</span>
+                    </a>
+                </div>
+            }
+        </div>
+
+        <button class="scroll-btn right" onclick="scrollGallery(300)">&#10095;</button>
+    </div>
     <ul class="nav nav-tabs mb-3" role="tablist">
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#places" role="tab">Избранное</a>
@@ -118,3 +137,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function scrollGallery(offset) {
+        const container = document.getElementById('gallery');
+        container.scrollBy({
+            left: offset,
+            behavior: 'smooth'
+        });
+    }
+</script>

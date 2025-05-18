@@ -14,16 +14,18 @@ namespace TravelApp.Platform.Services
         }
         public async Task<List<RecommendedItem>> GetRecommendedAsync()
             => await GetRecommendationsOnMaxBall();
+
         private async Task<List<RecommendedItem>> GetRecommendationsOnMaxBall()
         {
             var location = await _cityService.GetVisibleLocationAsync();
             var result = location.ToList().OrderByDescending(l => l.Rating).
                 Take(MaxCountLocation).Select(l => new RecommendedItem(
                  l.Id,
-                 l.PictureInCityLink,
-                 l.PageName,
                  l.Title,
-                 l.Rating))
+                 l.PageName,
+                 l.PictureInCityLink,
+                 l.Rating
+                 ))
                 .ToList();
 
             return result ?? [];
