@@ -9,5 +9,6 @@ namespace TravelApp.Platform.Services.Interfaces
         public Task<List<Location>> GetLocationByCityIdAsync(int cityId);
         public Task<List<Location>> GetVisibleLocationAsync(int cityId);
         public Task<AllCityInformation> GetAllCityInformationByPageNameAsync(string pageName);
+        public Task<List<Location>> GetVisibleLocationAsync();
     }
 }

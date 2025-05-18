@@ -15,10 +15,12 @@ namespace TravelApp.Platform.Services
         private readonly LocationHttpClient _locationHttpClient;
         private readonly FavoriteLocationHttpClient _favoriteLocationHttpClient;
         private readonly IUserFollowerService _userFollowerService;
+        private readonly IRecommendationService _recommendationService;
 
-        public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
+       public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
             IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
-            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient, IUserFollowerService userFollowerService)
+            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient, 
+            IUserFollowerService userFollowerService, IRecommendationService recommendationService)
         {
             _userHttpClient = userHttpClient;
             _clientIpService = clientIpService;
@@ -28,6 +30,7 @@ namespace TravelApp.Platform.Services
             _locationHttpClient = locationHttpClient;
             _favoriteLocationHttpClient = favoriteLocationHttpClient;
             _userFollowerService = userFollowerService;
+            _recommendationService = recommendationService;
         }
 
         public async Task<string?> AuthorizationUserAsync(UserAuthorization user)
@@ -161,5 +164,7 @@ namespace TravelApp.Platform.Services
                 ).ToList();
             return result;
         }
+        public async Task<List<RecommendedItem>> GetUserRecommendation()
+            => await _recommendationService.GetRecommendedAsync();
     }
 }

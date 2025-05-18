@@ -32,5 +32,10 @@ namespace TravelApp.Platform.Services
             var result = await _locationHttpClient.GetVisibleLocationByCityIdAsync(cityId);
             return result.ToList();
         }
+        public async Task<List<Location>> GetVisibleLocationAsync()
+        {
+            var result = await _locationHttpClient.GetVisibleAsync();
+            return result.ToList();
+        }
     }
 }

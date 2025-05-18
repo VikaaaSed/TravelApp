@@ -115,6 +115,7 @@ builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<INotificationService, TempDataNotificationService>();
 builder.Services.AddScoped<IFavoriteLocationService, FavoriteLocationService>();
 builder.Services.AddScoped<IUserFollowerService, UserFollowerService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
 var app = builder.Build();
 
