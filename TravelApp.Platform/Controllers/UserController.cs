@@ -40,6 +40,8 @@ namespace TravelApp.Platform.Controllers
 
             AllUserInformation userInformation =
             new AllUserInformation(user, feedback, favoriteLocations, subscriptions, followers, recommendations);
+            if (user.UserType)
+                return RedirectToAction("Index", "City", new { area = "Admin" });
             return View(userInformation);
         }
         [HttpGet]
