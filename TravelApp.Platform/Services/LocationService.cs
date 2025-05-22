@@ -5,7 +5,7 @@ using TravelApp.Platform.Services.Interfaces;
 
 namespace TravelApp.Platform.Services
 {
-    public class LocationService : ILocationService
+    public class LocationService : ILocationService, ILocationByUser
     {
         private readonly LocationViewHttpClient _locationViewHttpClient;
         private readonly LocationGalleryHttpClient _locationGalleryHttpClient;
@@ -14,12 +14,13 @@ namespace TravelApp.Platform.Services
         private readonly IClientIpService _clientIpService;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IFavoriteLocationService _favoriteLocationService;
+        private readonly LocationHttpClient _locationHttpClient;
         public LocationService(LocationViewHttpClient locationViewHttpClient,
             LocationGalleryHttpClient locationGalleryHttpClient,
             FeedbackViewHttpClient feedbackViewHttpClient,
             FeedbackHttpClient feedbackHttpClient,
             IClientIpService clientIpService, IJwtTokenService jwtTokenService,
-            IFavoriteLocationService favoriteLocationService)
+            IFavoriteLocationService favoriteLocationService, LocationHttpClient locationHttpClient)
         {
             _locationViewHttpClient = locationViewHttpClient;
             _locationGalleryHttpClient = locationGalleryHttpClient;
@@ -28,6 +29,7 @@ namespace TravelApp.Platform.Services
             _clientIpService = clientIpService;
             _jwtTokenService = jwtTokenService;
             _favoriteLocationService = favoriteLocationService;
+            _locationHttpClient = locationHttpClient;
         }
         public async Task<Feedback> CreateFeedbackAsync(Feedback feedback)
         {
@@ -99,6 +101,12 @@ namespace TravelApp.Platform.Services
                     else await _favoriteLocationService.CreateAsync(new FavoriteLocation { Id = 0, IdLocation = location.Id, IdUser = userId });
                 }
             }
+        }
+
+        public async Task<List<Location>> GetAllAsync()
+        {
+            var location = await _locationHttpClient.GetVisibleAsync();
+            return location.ToList();
         }
     }
 }

@@ -117,6 +117,7 @@ builder.Services.AddScoped<IFavoriteLocationService, FavoriteLocationService>();
 builder.Services.AddScoped<IUserFollowerService, UserFollowerService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<IFeedBackUser, FeedBackService>();
+builder.Services.AddScoped<ILocationByUser, LocationService>();
 
 var app = builder.Build();
 
