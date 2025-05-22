@@ -1,4 +1,5 @@
 ﻿using TravelApp.API.Models;
+using TravelApp.Platform.Areas.Admin.Models;
 using TravelApp.Platform.ClientAPI;
 using TravelApp.Platform.Models;
 using TravelApp.Platform.Services.Interfaces;
@@ -12,14 +13,14 @@ namespace TravelApp.Platform.Services
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
-        private readonly LocationHttpClient _locationHttpClient;
+        private readonly ILocationByUser _location;
         private readonly FavoriteLocationHttpClient _favoriteLocationHttpClient;
         private readonly IUserFollowerService _userFollowerService;
         private readonly IRecommendationService _recommendationService;
 
        public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
-            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IFeedBackUser feedBackUser, 
-            LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient, 
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IFeedBackUser feedBackUser,
+            ILocationByUser location, FavoriteLocationHttpClient favoriteLocationHttpClient, 
             IUserFollowerService userFollowerService, IRecommendationService recommendationService)
         {
             _userHttpClient = userHttpClient;
@@ -27,7 +28,7 @@ namespace TravelApp.Platform.Services
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
             _feedBackUser = feedBackUser;
-            _locationHttpClient = locationHttpClient;
+            _location = location;
             _favoriteLocationHttpClient = favoriteLocationHttpClient;
             _userFollowerService = userFollowerService;
             _recommendationService = recommendationService;
@@ -85,7 +86,7 @@ namespace TravelApp.Platform.Services
         public async Task<List<UserFeedback>> GetUserFeedbackAsync(int id)
         {
             var feedbacksTask = _feedBackUser.GetFeedbackByUserId(id);
-            var locationsTask = _locationHttpClient.GetAllAsync();
+            var locationsTask = _location.GetAllAsync();
 
             await Task.WhenAll(feedbacksTask, locationsTask);
 
@@ -106,7 +107,7 @@ namespace TravelApp.Platform.Services
         public async Task<List<FavoriteLocationItem>> GetFavoriteLocationsAsync(int id)
         {
             var rFL = await _favoriteLocationHttpClient.GetByUserIdAsync(id);
-            var rL = await _locationHttpClient.GetAllAsync();
+            var rL = await _location.GetAllAsync();
             var result = rFL.Join(rL, f => f.IdLocation, l => l.Id, (favorite, location) 
                 => new FavoriteLocationItem(favorite.Id, location.Id, location.PageName, location.Title));
             return result.ToList();
