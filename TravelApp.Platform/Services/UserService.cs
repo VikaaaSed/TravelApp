@@ -8,7 +8,7 @@ namespace TravelApp.Platform.Services
     public class UserService : IUserService
     {
         private readonly UserHttpClient _userHttpClient;
-        private readonly FeedbackHttpClient _feedbackHttpClient;
+        private readonly IFeedBackUser _feedBackUser;
         private readonly IClientIpService _clientIpService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenService _jwtTokenService;
@@ -18,7 +18,7 @@ namespace TravelApp.Platform.Services
         private readonly IRecommendationService _recommendationService;
 
        public UserService(UserHttpClient userHttpClient, IClientIpService clientIpService,
-            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, FeedbackHttpClient feedbackHttpClient, 
+            IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IFeedBackUser feedBackUser, 
             LocationHttpClient locationHttpClient, FavoriteLocationHttpClient favoriteLocationHttpClient, 
             IUserFollowerService userFollowerService, IRecommendationService recommendationService)
         {
@@ -26,7 +26,7 @@ namespace TravelApp.Platform.Services
             _clientIpService = clientIpService;
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
-            _feedbackHttpClient = feedbackHttpClient;
+            _feedBackUser = feedBackUser;
             _locationHttpClient = locationHttpClient;
             _favoriteLocationHttpClient = favoriteLocationHttpClient;
             _userFollowerService = userFollowerService;
@@ -84,7 +84,7 @@ namespace TravelApp.Platform.Services
 
         public async Task<List<UserFeedback>> GetUserFeedbackAsync(int id)
         {
-            var feedbacksTask = _feedbackHttpClient.GetAllAsync();
+            var feedbacksTask = _feedBackUser.GetFeedbackByUserId(id);
             var locationsTask = _locationHttpClient.GetAllAsync();
 
             await Task.WhenAll(feedbacksTask, locationsTask);
@@ -92,7 +92,7 @@ namespace TravelApp.Platform.Services
             var feedbacksResult = feedbacksTask.Result;
             var locationResult = locationsTask.Result;
 
-            List<UserFeedback> feedbacks = feedbacksResult.Where(f => f.IdUser == id)
+            List<UserFeedback> feedbacks = feedbacksResult
                 .Join(locationResult, f => f.IdLocation, l => l.Id, (feedback, location)
                 => new UserFeedback(
                     location.Title,
