@@ -108,5 +108,8 @@ namespace TravelApp.Platform.Services
             var location = await _locationHttpClient.GetVisibleAsync();
             return location.ToList();
         }
+
+        public async Task<Location?> GetAsync(int idLocation)
+            => await _locationHttpClient.GetAsync(idLocation);
     }
 }

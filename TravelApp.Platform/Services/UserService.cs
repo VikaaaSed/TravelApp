@@ -165,7 +165,20 @@ namespace TravelApp.Platform.Services
                 ).ToList();
             return result;
         }
-        public async Task<List<RecommendedItem>> GetUserRecommendation()
-            => await _recommendationService.GetRecommendedAsync();
+        public async Task<List<RecommendedItem>> GetUserRecommendation(int id)
+        {
+            List<Feedback> location = await _feedBackUser.GetFeedbackByUserId(id);
+            List<int> res = location.DistinctBy(l => l.IdLocation).Select(s => s.IdLocation).ToList();
+
+            List<int> idCites = new List<int>();
+            foreach (var item in res)
+            {
+                var loc = await _location.GetAsync(item);
+                if (loc != null && loc.PageVisible)
+                    idCites.Add(loc.IdCity);
+            }
+
+            return await _recommendationService.GetRecommendedAsync(idCites);
+        }
     }
 }
