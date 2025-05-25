@@ -167,6 +167,20 @@ namespace TravelApp.Platform.Services
         }
         public async Task<List<RecommendedItem>> GetUserRecommendation(int id)
         {
+            var idCitesTask = getUserIdCity(id);
+
+            var followersTask = GetUserFollowersAsync(id);
+            await Task.WhenAll(idCitesTask, followersTask);
+
+            var idCites = idCitesTask.Result;
+            var followers = followersTask.Result.Select(f => f.id).ToList();
+
+            var followersIdCites = await getFollowersIdCity(followers);
+
+            return await _recommendationService.GetRecommendedAsync(new RecommendationModel(id, idCites, followersIdCites));
+        }
+        private async Task<List<int>> getUserIdCity(int id)
+        {
             List<Feedback> location = await _feedBackUser.GetFeedbackByUserId(id);
             List<int> res = location.DistinctBy(l => l.IdLocation).Select(s => s.IdLocation).ToList();
 
@@ -177,8 +191,16 @@ namespace TravelApp.Platform.Services
                 if (loc != null && loc.PageVisible && !idCites.Contains(loc.IdCity))
                     idCites.Add(loc.IdCity);
             }
+            return idCites;
+        }
+        private async Task<Dictionary<int, List<int>>> getFollowersIdCity(List<int> followers)
+        {
+            Dictionary<int, List<int>> result = [];
 
-            return await _recommendationService.GetRecommendedAsync(new RecommendationModel(id, idCites));
+            foreach (var item in followers)
+                result.Add(item, await getUserIdCity(item));
+
+            return result;
         }
     }
 }

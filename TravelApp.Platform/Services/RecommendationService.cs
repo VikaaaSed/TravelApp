@@ -10,6 +10,7 @@ namespace TravelApp.Platform.Services
         private const int MaxCountLocationOnMax = 3;
         private const int MaxCountLocationOnCity = 4;
         private const int MaxCountLocation = 7;
+        private const int MaxCountLocationOnFollowers = 4;
 
         public RecommendationService(ICityService cityService)
         {
@@ -19,17 +20,18 @@ namespace TravelApp.Platform.Services
         {
             var maxBallRecTask = GetRecommendationsOnMaxBall();
             var cityRecTask = GetRecommendationsOnCity(model.MyCityId);
+            var followersRecTask = GetRecommendationsOnFollowers(model.MyFriendIdCity);
 
-            await Task.WhenAll(maxBallRecTask, cityRecTask);
+            await Task.WhenAll(maxBallRecTask, cityRecTask, followersRecTask);
 
             List<RecommendedItem> maxBall = maxBallRecTask.Result.DistinctBy(i => i.Id).Take(MaxCountLocationOnMax).ToList();
             List<RecommendedItem> cityRec = cityRecTask.Result;
-            var a = cityRec.Where(item => !maxBall.Any(n => n.Id == item.Id))
-                           .Distinct()
-                           .Take(MaxCountLocationOnCity)
-                           .ToList();
-            List<RecommendedItem> items = maxBall.Concat(a).Take(MaxCountLocation).ToList();
-            return items;
+            List<RecommendedItem> followersRec = followersRecTask.Result;
+            cityRec = containsList(cityRec, maxBall, MaxCountLocationOnCity);
+
+            followersRec = containsList(followersRec, [.. maxBall, .. cityRec], MaxCountLocationOnFollowers);
+
+            return followersRec.Concat([.. maxBall, .. cityRec]).Take(MaxCountLocation).ToList();
         }
 
         private async Task<List<RecommendedItem>> GetRecommendationsOnMaxBall()
@@ -64,5 +66,23 @@ namespace TravelApp.Platform.Services
 
             return result;
         }
+        private async Task<List<RecommendedItem>> GetRecommendationsOnFollowers(Dictionary<int, List<int>> followersIdCites)
+        {
+            followersIdCites = followersIdCites.OrderBy(f => f.Value.Count).Take(5).ToDictionary();
+
+            List<Location> location = [];
+
+            foreach (var id in followersIdCites)
+            {
+                location.AddRange(await GetLocationList(id.Value));
+                location.DistinctBy(l => l.Id).ToList();
+            }
+            return GetRecommendations(location);
+        }
+        private List<RecommendedItem> containsList(List<RecommendedItem> a, List<RecommendedItem> b, int count)
+            => a.Where(item => !b.Any(n => n.Id == item.Id))
+                   .Distinct()
+                   .Take(count)
+                   .ToList();
     }
 }
