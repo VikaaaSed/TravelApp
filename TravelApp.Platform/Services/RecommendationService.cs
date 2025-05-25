@@ -9,35 +9,39 @@ namespace TravelApp.Platform.Services
         private readonly ICityService _cityService;
         private const int MaxCountLocationOnMax = 3;
         private const int MaxCountLocationOnCity = 4;
-        private const int MaxCountLocation = 5;
+        private const int MaxCountLocation = 7;
 
         public RecommendationService(ICityService cityService)
         {
             _cityService = cityService;
         }
-        public async Task<List<RecommendedItem>> GetRecommendedAsync(List<int> idCity)
+        public async Task<List<RecommendedItem>> GetRecommendedAsync(RecommendationModel model)
         {
             var maxBallRecTask = GetRecommendationsOnMaxBall();
-            var cityRecTask = GetRecommendationsOnCity(idCity);
+            var cityRecTask = GetRecommendationsOnCity(model.MyCityId);
 
             await Task.WhenAll(maxBallRecTask, cityRecTask);
 
-            List<RecommendedItem> result = maxBallRecTask.Result;
-            result.AddRange(cityRecTask.Result);
-
-            return result.DistinctBy(r => r.Id).Take(MaxCountLocation).ToList();
+            List<RecommendedItem> maxBall = maxBallRecTask.Result.DistinctBy(i => i.Id).Take(MaxCountLocationOnMax).ToList();
+            List<RecommendedItem> cityRec = cityRecTask.Result;
+            var a = cityRec.Where(item => !maxBall.Any(n => n.Id == item.Id))
+                           .Distinct()
+                           .Take(MaxCountLocationOnCity)
+                           .ToList();
+            List<RecommendedItem> items = maxBall.Concat(a).Take(MaxCountLocation).ToList();
+            return items;
         }
 
         private async Task<List<RecommendedItem>> GetRecommendationsOnMaxBall()
         {
             var locations = await _cityService.GetVisibleLocationAsync();
 
-            return GetRecommendations(locations).OrderByDescending(l => l.Rating).Take(MaxCountLocationOnMax).ToList();
+            return GetRecommendations(locations).OrderByDescending(l => l.Rating).ToList();
         }
         private async Task<List<RecommendedItem>> GetRecommendationsOnCity(List<int> idCity)
         {
             var locations = await GetLocationList(idCity);
-            return GetRecommendations(locations).OrderBy(l => l.Title).Take(MaxCountLocationOnCity).ToList();
+            return GetRecommendations(locations).OrderBy(l => l.Title).ToList();
         }
         private async Task<List<Location>> GetLocationList(List<int> idCites)
         {
@@ -49,12 +53,12 @@ namespace TravelApp.Platform.Services
         }
         private List<RecommendedItem> GetRecommendations(List<Location> locations)
         {
-            List<RecommendedItem> result = locations.ToList().Select(l => new RecommendedItem(
-                 l.Id,
-                 l.Title,
-                 l.PageName,
-                 l.PictureInCityLink,
-                 l.Rating
+            List<RecommendedItem> result = locations.DistinctBy(l => l.Id).Select(l => new RecommendedItem(
+                l.Id,
+                l.Title,
+                l.PageName,
+                l.PictureInCityLink,
+                l.Rating
                  ))
                 .ToList() ?? [];
 
