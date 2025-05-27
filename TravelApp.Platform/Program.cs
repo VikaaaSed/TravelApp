@@ -118,6 +118,7 @@ builder.Services.AddScoped<IUserFollowerService, UserFollowerService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<IFeedBackUser, FeedBackService>();
 builder.Services.AddScoped<ILocationByUser, LocationService>();
+builder.Services.AddScoped<IUserSearch, UserService>();
 
 var app = builder.Build();
 

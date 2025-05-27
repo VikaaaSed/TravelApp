@@ -1,12 +1,11 @@
 ﻿using TravelApp.API.Models;
-using TravelApp.Platform.Areas.Admin.Models;
 using TravelApp.Platform.ClientAPI;
 using TravelApp.Platform.Models;
 using TravelApp.Platform.Services.Interfaces;
 
 namespace TravelApp.Platform.Services
 {
-    public class UserService : IUserService
+    public class UserService : IUserService, IUserSearch
     {
         private readonly UserHttpClient _userHttpClient;
         private readonly IFeedBackUser _feedBackUser;
@@ -202,5 +201,12 @@ namespace TravelApp.Platform.Services
 
             return result;
         }
+
+        public Task<UserFollower> AddFollowersAsync(UserFollower follower)
+            => _userFollowerService.CreateAsync(follower);        
+
+        public Task DeleteFollowersAsync(int id)
+            => _userFollowerService.DeleteAsync(id);
+        
     }
 }
