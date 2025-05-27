@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TravelApp.API.Models;
 using TravelApp.Platform.Models;
 using TravelApp.Platform.Services.Interfaces;
 
@@ -9,11 +10,13 @@ namespace TravelApp.Platform.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
+        private readonly IUserSearch _search;
         public UserController(ILogger<UserController> logger,
-            IUserService userService)
+            IUserService userService, IUserSearch search)
         {
             _logger = logger;
             _userService = userService;
+            _search = search;
         }
         [Authorize]
         [HttpGet("[controller]/profile")]
@@ -121,6 +124,12 @@ namespace TravelApp.Platform.Controllers
             AllUserInformation userInformation = new AllUserInformation(user, feedback, favoriteLocations,
                 subscriptions, followers);
             return View(userInformation);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            List<User> users = await _search.GetAllAsync();
+            return View(users);
         }
     }
 }

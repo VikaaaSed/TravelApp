@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TravelApp.API.Models.User>
+
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<div class="container">
+    <h2 class="text-center my-4">Пользователи</h2>
+
+    <form action="/" method="post" class="mb-4 d-flex justify-content-center">
+        <input type="text" name="search" class="form-control w-25 me-2" placeholder="Поиск..." />
+        <input type="submit" value="Поиск" class="btn btn-primary" />
+    </form>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="list-group">
+            @foreach (var user in Model)
+            {
+                <div class="list-group-item d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <img src="@(string.IsNullOrEmpty(user.AvatarLink) ? Url.Content("~/defaultUserAvatar.jpg") : user.AvatarLink)"
+                             class="rounded-circle me-3"
+                             style="width: 50px; height: 50px;"
+                             alt="Аватар" />
+                        <a asp-action="Index" asp-controller="User" asp-route-id="@user.Id" class="fw-bold text-decoration-none">
+                            @($"{user.FirstName} {user.LastName}")
+                        </a>
+                    </div>
+                    <form action="/" method="post" class="d-flex align-items-center mb-0">
+                        <input type="submit" value="Подписаться" class="btn btn-primary" />
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted text-center">Не удалось найти пользователей</p>
+    }
+</div>
