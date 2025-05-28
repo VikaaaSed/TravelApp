@@ -7,8 +7,8 @@
 <div class="container">
     <h2 class="text-center my-4">Пользователи</h2>
 
-    <form action="/" method="post" class="mb-4 d-flex justify-content-center">
-        <input type="text" name="search" class="form-control w-25 me-2" placeholder="Поиск..." />
+    <form asp-action="Search" asp-controller="User" method="get" asp-for="email" class="mb-4 d-flex justify-content-center">
+        <input type="text" name="email" class="form-control w-25 me-2" placeholder="Поиск..." />
         <input type="submit" value="Поиск" class="btn btn-primary" />
     </form>
 

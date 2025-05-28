@@ -126,10 +126,10 @@ namespace TravelApp.Platform.Controllers
             return View(userInformation);
         }
         [HttpGet]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(string email)
         {
             List<User> users = await _search.GetAllAsync();
-            return View(users);
+            return View(users.Where(user => user.Email.Contains(email ?? "")));
         }
     }
 }
