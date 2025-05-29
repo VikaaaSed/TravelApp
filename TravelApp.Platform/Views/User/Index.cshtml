@@ -14,7 +14,29 @@
                 <p class="text-muted mb-0">@Model.User.Email</p>
             </div>
             <div class="ms-auto">
-                <a href="#" class="btn btn-primary btn-sm">Редактировать профиль</a>
+                @if (string.Equals(ViewData["userType"], "I"))
+                {
+                    <a href="#" class="btn btn-primary btn-sm">Редактировать профиль</a>
+
+                }
+                else
+                {
+                    if (string.Equals(ViewData["userType"], "other"))
+                    {
+                        <form asp-for="id">
+                            <input type="hidden" name="id" value="@Model.User.Id" />
+                            <input type="submit" value="Подписаться" class="btn btn-primary" />
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-for="id">
+                            <input type="hidden" name="id" value="@Model.User.Id" />
+                            <input type="submit" value="Отписаться" class="btn btn-danger" />
+                        </form>
+                    }
+
+                }
             </div>
         </div>
     </div>

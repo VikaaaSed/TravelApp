@@ -45,6 +45,7 @@ namespace TravelApp.Platform.Controllers
             new AllUserInformation(user, feedback, favoriteLocations, subscriptions, followers, recommendations);
             if (user.UserType)
                 return RedirectToAction("Index", "City", new { area = "Admin" });
+            ViewData["userType"] = "I";
             return View(userInformation);
         }
         [HttpGet]
@@ -107,6 +108,13 @@ namespace TravelApp.Platform.Controllers
         [HttpGet("[controller]/index/{id}")]
         public async Task<IActionResult> Index(int id)
         {
+            var token = Request.Cookies["jwt_token"];
+            var u = await _userService.GetUserByTokenAsync(token ?? "");
+            var mySubscript = await _userService.GetUserSubscriptionsAsync(u.Id);
+            var mySubscriptId = mySubscript.Select(s => s.FollowerId).ToHashSet();
+            ViewData["userType"] = u.Id == id
+                ? "I" : mySubscriptId.Contains(id)
+                ? "subscribers" : "other";
             var userTask = _userService.GetAsync(id);
             var feedbackTask = _userService.GetUserFeedbackAsync(id);
             var favoriteLocationsTask = _userService.GetFavoriteLocationsAsync(id);
