@@ -144,5 +144,14 @@ namespace TravelApp.Platform.Controllers
                 .ToList();
             return View(users.Where(user => user.Email.Contains(email ?? "")));
         }
+        [HttpPost]
+        public async Task<IActionResult> Subscribe(int id)
+        {
+            var token = Request.Cookies["jwt_token"];
+            var currentUser = await _userService.GetUserByTokenAsync(token ?? "");
+
+            await _search.AddFollowersAsync(new UserFollower { Id = 0, IdUser = currentUser.Id, IdFollower = id });
+            return RedirectToAction("Search");
+        }
     }
 }

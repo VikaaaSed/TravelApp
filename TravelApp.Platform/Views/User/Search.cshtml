@@ -27,7 +27,8 @@
                             @($"{user.FirstName} {user.LastName}")
                         </a>
                     </div>
-                    <form action="/" method="post" class="d-flex align-items-center mb-0">
+                    <form asp-action="Subscribe" asp-controller="User" asp-for="id" class="d-flex align-items-center mb-0">
+                        <input type="hidden" name="id" value="@user.Id" />
                         <input type="submit" value="Подписаться" class="btn btn-primary" />
                     </form>
                 </div>
