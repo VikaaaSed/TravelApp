@@ -166,5 +166,23 @@ namespace TravelApp.Platform.Controllers
                 return Redirect(referer);
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<IActionResult> UnSubscribe(int id)
+        {
+            var token = Request.Cookies["jwt_token"];
+            var currentUser = await _userService.GetUserByTokenAsync(token ?? "");
+
+            var subscription = await _userService.GetUserSubscriptionsAsync(currentUser.Id);
+
+            var subscriptionId = subscription.FirstOrDefault(s => s.FollowerId == id)?.id;
+
+            await _search.DeleteFollowersAsync(subscriptionId ?? 0);
+
+            var referer = Request.Headers["Referer"].ToString();
+
+            if (!string.IsNullOrEmpty(referer))
+                return Redirect(referer);
+            return RedirectToAction("Index");
+        }
     }
 }
